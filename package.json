@@ -1,0 +1,19 @@
+{
+  "name": "vtc-scanner",
+  "version": "0.0.1",
+  "description": "Vertcoin node and p2pool scanner",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "geoip-lite": "^1.2.1",
+    "lodash": "^4.17.4",
+    "mongoose": "^4.12.4",
+    "restify": "^6.2.3",
+    "restify-clients": "^1.5.2",
+    "restify-plugins": "^1.6.0"
+  }
+}
