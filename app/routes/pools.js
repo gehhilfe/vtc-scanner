@@ -6,7 +6,10 @@ const Pool = mongoose.model('Pool');
 
 module.exports = function (server) {
   server.get('/api/pools', async (req, res, next) => {
-    const pools = await Pool.find({});
+    const pools = await Pool.find({
+      errCounter: 0,
+      local_stats: { $ne: null }
+    }).limit(10).sort({updatedAt: -1});
     res.send(pools);
     return next();
   });
