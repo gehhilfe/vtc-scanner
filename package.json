@@ -4,6 +4,7 @@
   "description": "Vertcoin node and p2pool scanner",
   "main": "server.js",
   "scripts": {
+    "lint": "eslint *.js models/*.js routes/*.js config/*.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -15,5 +16,8 @@
     "restify": "^6.2.3",
     "restify-clients": "^1.5.2",
     "restify-plugins": "^1.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.10.0"
   }
 }

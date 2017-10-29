@@ -1,20 +1,20 @@
 /*jslint node: true */
 'use strict';
 
-var path = require('path');
+const path = require('path');
 
-var rootPath = path.normalize(__dirname + '/..');
+const rootPath = path.normalize(__dirname + '/..');
 
-var NODE_ENV = process.env.NODE_ENV || 'development';
-var NODE_HOST = process.env.NODE_HOST || '127.0.0.1';
-var NODE_PORT = process.env.NODE_PORT || 3000;
-var MONGO_HOST = process.env.MONGO_HOST || '127.0.0.1';
-var MONGO_PORT = process.env.MONGO_PORT || 27017;
-var LOG_LEVEL = process.env.LOG_LEVEL || 'info';
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const NODE_HOST = process.env.NODE_HOST || '127.0.0.1';
+const NODE_PORT = process.env.NODE_PORT || 3000;
+const MONGO_HOST = process.env.MONGO_HOST || '127.0.0.1';
+const MONGO_PORT = process.env.MONGO_PORT || 27017;
+const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
 
-var APP_NAME = 'vtc-scanner-';
+const APP_NAME = 'vtc-scanner-';
 
-var config = {
+const config = {
   development: {
     root: rootPath,
     app: {

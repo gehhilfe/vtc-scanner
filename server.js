@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test', { useMongoClient: true });
+mongoose.connect('mongodb://localhost/test', {useMongoClient: true});
 
 const path = require('path');
 
@@ -32,6 +32,6 @@ server.get('/', function (req, res, next) {
   return next();
 });
 
-server.listen(8080, function() {
-    console.log('%s listening at %s', server.name, server.url);
+server.listen(8080, async () => {
+  console.log('%s listening at %s', server.name, server.url);
 });

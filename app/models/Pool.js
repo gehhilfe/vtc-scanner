@@ -1,11 +1,10 @@
 /*jslint node: true */
 'use strict';
+const mongoose = require('mongoose');
 
-var mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var Schema = mongoose.Schema;
-
-var poolSchema = new Schema({
+const poolSchema = new Schema({
   ip: {
     type: String, required: true, index: true, unique: true
   },
@@ -15,8 +14,16 @@ var poolSchema = new Schema({
   location: String,
   uptime: Number
 });
-
 poolSchema.set('timestamps', true);
 
-var Pool = mongoose.model('Pool', poolSchema)
+
+const restifyClients = require('restify-clients');
+const geoip = require('geoip-lite');
+
+class PoolClass {
+
+}
+
+poolSchema.loadClass(PoolClass);
+const Pool = mongoose.model('Pool', poolSchema);
 module.exports = Pool;
