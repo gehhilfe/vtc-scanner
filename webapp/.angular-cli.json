@@ -9,7 +9,9 @@
       "outDir": "dist",
       "assets": [
         "assets",
-        "favicon.ico"
+        "favicon.ico",
+        "flags.png",
+        "blank.gif"
       ],
       "index": "index.html",
       "main": "main.ts",
@@ -19,7 +21,8 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "styles.scss"
+        "styles.scss",
+        "flags.min.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
