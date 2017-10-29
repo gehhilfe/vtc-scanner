@@ -59,8 +59,8 @@ $mat-vertcoin: (
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue.
-$vertcoin-app-primary: mat-palette($mat-green);
-$vertcoin-app-accent:  mat-palette($mat-light-green, A200, A100, A400);
+$vertcoin-app-primary: mat-palette($mat-vertcoin);
+$vertcoin-app-accent:  mat-palette($mat-vertcoin, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
 $vertcoin-app-warn:    mat-palette($mat-red);
@@ -80,4 +80,18 @@ body {
 #toolbar button {
   margin: 0px 5px;
   color: $primary-color-text;
+}
+
+#footer {
+  text-align: center;
+  height: 150px;
+  padding: 50px;
+  font-size: x-large;
+  color: $primary-color-text;
+  background-color: $primary-color;
+}
+
+#footer .button-row button{
+  color: $primary-color-light;
+  margin: 50px 25px;
 }
