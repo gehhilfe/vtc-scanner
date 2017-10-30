@@ -4,11 +4,17 @@
   </div>
   <div fxLayout="row" id="inputrow">
     <mat-form-field fxFlex="1 1 auto">
-      <input matInput placeholder="P2Pool Address" >
-      <mat-hint align="start">IP:Port</mat-hint>
+      <input matInput placeholder="P2Pool Address" [formControl]="ipFormControl" >
+      <mat-hint align="start">IP:Port or Domain:Port</mat-hint>
+      <mat-error *ngIf="ipFormControl.hasError('required')">
+        This is <strong>requried</strong>
+      </mat-error>
+      <mat-error *ngIf="ipFormControl.hasError('pattern')">
+        Please enter a valid IP:Port or Domain:Port address
+      </mat-error>
     </mat-form-field>
     <div fxFlex="0 1 auto">
-      <button mat-raised-button color="primary">Add</button>
+      <button mat-raised-button color="primary" (click)="addPool()">Add</button>
     </div>
   </div>
 </div>

@@ -10,6 +10,9 @@ import {
 import { PoolTableComponent } from './pool-table/pool-table.component';
 import {FlexLayoutModule} from "@angular/flex-layout";
 import { AddPoolFormComponent } from './add-pool-form/add-pool-form.component';
+import {HttpClientModule} from "@angular/common/http";
+import {PoolService} from "./pool.service";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -28,9 +31,14 @@ import { AddPoolFormComponent } from './add-pool-form/add-pool-form.component';
     MatFormFieldModule,
     BrowserModule,
     MatListModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    PoolService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
