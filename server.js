@@ -43,8 +43,11 @@ server.listen(8080, async () => {
     const ps = await Pool.getToRefresh();
 
     await Promise.all(_.map(ps, async (p) => {
-      console.log('Update pool status of ' + p._id);
       try {
+        await new Promise(resolve=>{
+          setTimeout(resolve, (Math.random()*5+1)*1000);
+        });
+        console.log('Update pool status of ' + p._id);
         const peers = await p.getPeers();
 
         await p.updateStats();

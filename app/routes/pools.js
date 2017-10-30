@@ -18,4 +18,17 @@ module.exports = function (server) {
     res.send(await Pool.findOne({_id: req.params.id}));
     return next();
   });
+
+  server.post('/api/pools', async (req, res, next) => {
+    let p = await Pool.findOne({ip: req.body.ip});
+    if(p) {
+      res.send(p);
+    } else {
+      p = new Pool({
+        ip: req.body.ip
+      });
+      res.send(await p.save());
+    }
+    return next();
+  });
 };

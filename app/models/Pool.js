@@ -39,6 +39,9 @@ class PoolClass {
         if (err) {
           reject(err);
         } else {
+          // Remove because of possible dotted field in miner address
+          delete obj.miner_hash_rates;
+          delete obj.miner_dead_hash_rates;
           this.local_stats = obj;
           this.fee = obj.fee;
           this.version = obj.version;
@@ -67,7 +70,7 @@ class PoolClass {
           reject(err);
         } else {
           let peers = _.split(obj, ' ');
-          peers = _.map(peers, (it) => {
+          peers = _.filter(_.map(peers, (it) => {
             if(it.indexOf(':') === -1) {
               it = it+':0';
             }
@@ -76,6 +79,9 @@ class PoolClass {
               addr[1] = self.getPort();
             }
             return addr[0]+':'+addr[1];
+          }), (it) => {
+            const addr = addrToIPPort(it);
+            return addr[1] == 9171 || addr[1] == 9181;
           });
           resolve(peers);
         }
