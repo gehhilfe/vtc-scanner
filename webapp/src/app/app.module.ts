@@ -5,7 +5,7 @@ import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {
   MatButtonModule, MatIconModule, MatPaginatorModule, MatTableModule, MatToolbarModule, MatInputModule,
-  MatFormFieldModule, MatListModule
+  MatFormFieldModule, MatListModule, MatProgressBarModule, MatSlideToggleModule, MatExpansionModule, MatSortModule
 } from "@angular/material";
 import { PoolTableComponent } from './pool-table/pool-table.component';
 import {FlexLayoutModule} from "@angular/flex-layout";
@@ -29,11 +29,15 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     FlexLayoutModule,
     MatInputModule,
     MatFormFieldModule,
+    MatProgressBarModule,
     BrowserModule,
     MatListModule,
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
+    MatExpansionModule,
+    MatSortModule,
+    MatSlideToggleModule,
     ReactiveFormsModule
   ],
   providers: [

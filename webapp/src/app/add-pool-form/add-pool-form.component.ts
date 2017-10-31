@@ -16,6 +16,8 @@ export class AddPoolFormComponent implements OnInit {
     Validators.pattern(IP_DOMAIN_PORT_REGEX)
   ]);
 
+  bussy = false;
+
   constructor(
     private poolService: PoolService
   ) { }
@@ -24,6 +26,13 @@ export class AddPoolFormComponent implements OnInit {
   }
 
   addPool() {
-    console.log("Test");
+    this.bussy = true;
+    this.poolService.addPool(this.ipFormControl.value).subscribe(
+      (res) => {
+        this.bussy = false;
+      }, (err) => {
+        this.bussy = false;
+      }
+    );
   }
 }

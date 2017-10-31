@@ -14,7 +14,8 @@
       </mat-error>
     </mat-form-field>
     <div fxFlex="0 1 auto">
-      <button mat-raised-button color="primary" (click)="addPool()">Add</button>
+      <button mat-raised-button color="primary" [disabled]="!ipFormControl.valid || bussy" (click)="addPool()">Add</button>
     </div>
   </div>
+  <mat-progress-bar mode="indeterminate" *ngIf="bussy"></mat-progress-bar>
 </div>

@@ -24,9 +24,9 @@ $secondary-text-color: #757575;
 $divider-color:        #BDBDBD;
 
 $mat-vertcoin: (
-  50: $primary-color,
-  100: $primary-color,
-  200: $primary-color,
+  50: $primary-color-light,
+  100: $primary-color-light,
+  200: $primary-color-light,
   300: $primary-color,
   400: $primary-color,
   500: $primary-color,
@@ -34,7 +34,7 @@ $mat-vertcoin: (
   700: $primary-color,
   800: $primary-color,
   900: $primary-color,
-  A100: $primary-color-dark,
+  A100: $primary-color-light,
   A200: $primary-color-dark,
   A400: $primary-color-dark,
   A700: $primary-color-dark,

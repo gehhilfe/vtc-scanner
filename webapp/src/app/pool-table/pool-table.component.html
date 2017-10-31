@@ -1,28 +1,40 @@
 <div class="mat-elevation-z8">
-  <mat-table #table [dataSource]="dataSource">
+  <mat-table #table [dataSource]="dataSource" matSort>
     <!-- Country Column -->
     <ng-container matColumnDef="country">
-      <mat-header-cell *matHeaderCellDef> Country</mat-header-cell>
-      <mat-cell *matCellDef="let element"><img src="assets/blank.gif" class="flag mat-elevation-z4 flag-{{element.country}}" /></mat-cell>
+      <mat-header-cell *matHeaderCellDef>Country</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+            <img src="assets/blank.gif" class="flag flag-{{element.country.toLowerCase()}}"/>
+      </mat-cell>
     </ng-container>
 
     <!-- IP Column -->
     <ng-container matColumnDef="ip">
-      <mat-header-cell *matHeaderCellDef> IP</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>IP</mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.ip}}</mat-cell>
     </ng-container>
 
     <!-- Fee Column -->
     <ng-container matColumnDef="fee">
-      <mat-header-cell *matHeaderCellDef> Fee</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Fee</mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.fee}}</mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
   </mat-table>
-  <mat-paginator [length]="100"
-                 [pageSize]="10"
-                 [pageSizeOptions]="[5, 10, 25, 100]">
+  <mat-paginator [length]="numberOfEntries"
+                 [pageSize]="5"
+                 [pageSizeOptions]="[5, 10, 25]"
+                 (page)="changePage($event)">
   </mat-paginator>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>Filter</mat-panel-title>
+      <mat-panel-title>Filter to find the perfect pool</mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+
+  <mat-progress-bar mode="query" *ngIf="bussy"></mat-progress-bar>
 </div>

@@ -1,17 +1,63 @@
 const _ = require('lodash');
 const mongoose = require('mongoose');
 const path = require('path');
+const geoip = require('geoip-lite');
 
 const Pool = mongoose.model('Pool');
 
 module.exports = function (server) {
   server.get('/api/pools', async (req, res, next) => {
-    const pools = await Pool.find({
-      errCounter: 0,
-      local_stats: { $ne: null }
-    }).limit(10).sort({updatedAt: -1});
-    res.send(pools);
-    return next();
+    try {
+      let pools;
+
+      let reqGeo = geoip.lookup(req.connection.remoteAddress);
+      if(!reqGeo) {
+        reqGeo = {
+          ll: [0,0]
+        };
+      }
+
+      let query = Pool.find({
+        errCounter: 0,
+        local_stats: {$ne: null}
+      }).sort({
+        fee: 1
+      });
+
+      if(req.query.sortfee) {
+        query = query.sort({fee: req.query.sortfee});
+      }
+
+      if (reqGeo && reqGeo.ll) {
+        query = query.where('location')
+          .near({
+            center: [reqGeo.ll[1], reqGeo.ll[0]],
+            spherical: true
+          });
+      }
+
+      if (req.query.pageIndex) {
+        const actualPageSize = Math.max(Math.min(req.query.pageSize, 25), 5);
+        pools = await query
+          .limit(actualPageSize)
+          .skip(actualPageSize * req.query.pageIndex);
+        res.send({
+          result: pools,
+          length: await Pool.find({
+            errCounter: 0,
+            local_stats: {$ne: null}
+          }).count()
+        });
+      } else {
+        pools = await query
+          .limit(10)
+          .sort({updatedAt: -1});
+        res.send(pools);
+      }
+      return next();
+    }catch (err) {
+      return next(err);
+    }
   });
 
   server.get('/api/pools/:id', async (req, res, next) => {

@@ -9,13 +9,24 @@ const poolSchema = new Schema({
   ip: {
     type: String, required: true, index: true, unique: true
   },
+  port: {
+    type: Number,
+    index: true
+  },
   errCounter: {type: Number, default: 0},
+  sucCounter: {type: Number, default: 0},
   version: String,
   fee: Number,
   local_stats: Object,
-  location: String,
-  uptime: Number
+  country: String,
+  uptime: Number,
+  location: {
+    'type': {type: String, default: 'Point'},
+    coordinates: {type: [Number], default: [0,0]}
+  }
 });
+
+poolSchema.index({location: '2dsphere'});
 poolSchema.set('timestamps', true);
 
 
@@ -31,9 +42,15 @@ class PoolClass {
         connectTimeout: 5*1000,
         requestTimeout: 5*1000
       });
-      const loc = geoip.lookup(addrToIPPort(this.ip)[0]);
 
-      this.location = loc.country;
+      const ipPortSplit = addrToIPPort(this.ip);
+
+      this.port = ipPortSplit[1];
+
+      const loc = geoip.lookup(ipPortSplit[0]);
+
+      this.country = loc.country;
+      this.location.coordinates = [loc.ll[1], loc.ll[0]];
 
       client.get('/local_stats', (err, clientReq, clientRes, obj) => {
         if (err) {
