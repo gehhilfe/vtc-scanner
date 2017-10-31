@@ -4,14 +4,24 @@
     <ng-container matColumnDef="country">
       <mat-header-cell *matHeaderCellDef></mat-header-cell>
       <mat-cell *matCellDef="let element">
-            <img src="assets/blank.gif" class="flag flag-{{element.country.toLowerCase()}}"/>
+        <img src="assets/blank.gif" class="flag flag-{{element.country.toLowerCase()}}"/>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Score Column -->
+    <ng-container matColumnDef="score">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <mat-icon color="primary" *ngIf="element.score == 4">star</mat-icon>
+        <mat-icon color="black" *ngIf="element.score == 3">star</mat-icon>
+        <mat-icon color="warn" *ngIf="element.score < 3">star</mat-icon>
       </mat-cell>
     </ng-container>
 
     <!-- IP Column -->
     <ng-container matColumnDef="ip">
       <mat-header-cell *matHeaderCellDef>IP</mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.dns}}:{{element.port}}</mat-cell>
+      <mat-cell *matCellDef="let element"> {{element.ip}}</mat-cell>
     </ng-container>
 
     <!-- Fee Column -->
@@ -41,7 +51,8 @@
     <!-- Uptime Column -->
     <ng-container matColumnDef="uptime">
       <mat-header-cell *matHeaderCellDef>Uptime</mat-header-cell>
-      <mat-cell *matCellDef="let element" class="numbercell"> {{element.last_offline | uptime | amDuration:'ms'}}</mat-cell>
+      <mat-cell *matCellDef="let element" class="numbercell"> {{element.last_offline | uptime | amDuration:'ms'}}
+      </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

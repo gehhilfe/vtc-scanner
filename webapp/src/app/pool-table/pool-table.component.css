@@ -6,7 +6,7 @@
 .numbercell {
 }
 
-.mat-column-country {
+.mat-column-country, .mat-column-score {
   flex: 0 0 50px;
 }
 

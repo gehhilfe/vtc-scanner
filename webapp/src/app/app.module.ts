@@ -16,6 +16,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { HashRatePipe } from './hash-rate.pipe';
 import { UptimePipe } from './uptime.pipe';
 import {MomentModule} from "angular2-moment";
+import { TimesPipe } from './times.pipe';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {MomentModule} from "angular2-moment";
     PoolTableComponent,
     AddPoolFormComponent,
     HashRatePipe,
-    UptimePipe
+    UptimePipe,
+    TimesPipe
   ],
   imports: [
     MomentModule,

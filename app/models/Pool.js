@@ -9,6 +9,7 @@ const poolSchema = new Schema({
   ip: {
     type: String, required: true, index: true, unique: true
   },
+  score: Number,
   dns: String,
   port: {
     type: Number,

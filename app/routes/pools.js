@@ -38,6 +38,9 @@ module.exports = function (server) {
         query = query.sort({ping: req.query.sortping});
       }
 
+
+      query.sort({score: -1});
+
       if (reqGeo && reqGeo.ll) {
         query = query.where('location')
           .near({
