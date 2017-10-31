@@ -15,7 +15,7 @@ import {Subject} from "rxjs/Subject";
 })
 export class PoolTableComponent implements OnInit {
 
-  displayedColumns = ['country', 'fee', 'ip'];
+  displayedColumns = ['country', 'ip', 'fee', 'active_miners', 'hash_rate'];
   dataSource = new PoolDataSource();
 
   lastSort: Sort = {
@@ -68,6 +68,7 @@ export class PoolTableComponent implements OnInit {
   changePage(event: PageEvent) {
     // Page index change
     this.bussy = true;
+    this.lastPage = event;
     this.poolService.listPools(event, this.lastSort).subscribe(
       (res) => {
         this.numberOfEntries = res.length;

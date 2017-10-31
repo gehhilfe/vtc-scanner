@@ -1,8 +1,9 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <mat-toolbar id="toolbar" color="primary">
-  <button mat-button>{{title}}</button>
-  <button mat-button>Nodes</button>
-  <button mat-button>Pools</button>
+  {{title}}
+
+  <button mat-button>POOLS</button>
+  <button mat-button>GET STARTED</button>
 </mat-toolbar>
 
 
@@ -24,7 +25,7 @@
 <div id="spacer">
 </div>
 
-<div fxLayout="row">
+<div fxLayout="row" style="margin-bottom: 150px">
   <div fxFlex></div>
   <div fxFlex="75" class="mat-elevation-z8 box">
     <app-add-pool-form></app-add-pool-form>

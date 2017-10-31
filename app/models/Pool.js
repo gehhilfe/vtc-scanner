@@ -9,6 +9,7 @@ const poolSchema = new Schema({
   ip: {
     type: String, required: true, index: true, unique: true
   },
+  dns: String,
   port: {
     type: Number,
     index: true
@@ -20,10 +21,33 @@ const poolSchema = new Schema({
   local_stats: Object,
   country: String,
   uptime: Number,
+  active_miners: {
+    type: Number,
+    default: 0
+  },
+  hash_rate: {
+    type: Number,
+    default: 0.0
+  },
+  efficiency: {
+    type: Number,
+    default: 0.0
+  },
+  shares: {
+    dead: Number,
+    orphan: Number,
+    total: Number
+  },
+  donation_proportion: Number,
   location: {
     'type': {type: String, default: 'Point'},
     coordinates: {type: [Number], default: [0,0]}
-  }
+  },
+  ping: {
+    type: Number,
+    default: 0.0
+  },
+  last_offline: { type: Date, default: Date.now }
 });
 
 poolSchema.index({location: '2dsphere'});
@@ -32,6 +56,7 @@ poolSchema.set('timestamps', true);
 
 const restifyClients = require('restify-clients');
 const geoip = require('geoip-lite');
+const dns = require('dns');
 
 class PoolClass {
 
@@ -57,13 +82,30 @@ class PoolClass {
           reject(err);
         } else {
           // Remove because of possible dotted field in miner address
-          delete obj.miner_hash_rates;
-          delete obj.miner_dead_hash_rates;
-          this.local_stats = obj;
+          let numMiner = 0;
+          let hashRate = 0;
+          if(obj.miner_hash_rates) {
+            numMiner = _.keys(obj.miner_hash_rates).length;
+            hashRate = _.reduce(_.values(obj.miner_hash_rates), (acc, it) => acc+it);
+          }
+
+
+          this.hash_rate = hashRate;
+          this.active_miners = numMiner;
+          this.efficency = obj.efficency;
+          this.shares = obj.shares;
+          this.donation_proportion = obj.donation_proportion;
           this.fee = obj.fee;
           this.version = obj.version;
           this.uptime = obj.uptime;
-          resolve(this);
+          dns.reverse(ipPortSplit[0], (err, hostnames) => {
+            if(err) {
+              reject(err);
+            } else {
+              this.dns = hostnames[0];
+              resolve(this);
+            }
+          });
         }
       });
     });

@@ -8,12 +8,23 @@ import {PageEvent, Sort} from "@angular/material";
 
 export interface PoolDto {
   id: string,
+  dns: string,
   errCounter: number,
   version: string,
   fee: number,
   country: string,
   loc: number[],
-  uptime: number
+  uptime: number,
+  active_miners: number,
+  efficiency: number,
+  hash_rate: number,
+  last_offline: Date,
+  port: number,
+  shares: {
+    total: number,
+    orphan: 53,
+    dead: 63
+  }
 }
 
 export interface PaginatedPoolDto {
@@ -48,6 +59,18 @@ export class PoolService {
       if(sort.direction === "desc")
         httpParams = httpParams.set("sortfee", "-1");
     }
+
+    if(sort.active === "active_miners")
+      if(sort.direction === "asc")
+        httpParams = httpParams.set("sortactive_miners", "1");
+    if(sort.direction === "desc")
+      httpParams = httpParams.set("sortactive_miners", "-1");
+
+    if(sort.active === "hash_rate")
+      if(sort.direction === "asc")
+        httpParams = httpParams.set("sorthash_rate", "1");
+    if(sort.direction === "desc")
+      httpParams = httpParams.set("sorthash_rate", "-1");
 
     return this.http
       .get<PaginatedPoolDto>(this.apiUrl, {

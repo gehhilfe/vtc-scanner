@@ -74,7 +74,13 @@ $vertcoin-app-theme: mat-light-theme($vertcoin-app-primary, $vertcoin-app-accent
 // that you are using.
 @include angular-material-theme($vertcoin-app-theme);
 
+html {
+  height: 100%;
+}
+
 body {
+  position: relative;
+  min-height: 100%;
   margin: 0;
   background-color: $body-background;
 }
@@ -88,18 +94,30 @@ body {
 }
 
 #footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   text-align: center;
-  height: 150px;
-  padding: 50px;
+  height: 100px;
+  padding: 15px;
   font-size: x-large;
   color: $primary-color-text;
   background-color: $primary-color;
 }
 
 #footer .button-row button{
-  margin: 50px 25px;
+  margin: 15px 25px;
 }
 
 #spacer {
   height: 50px;
+}
+
+#lowerspacer {
+  height: 50px;
+}
+
+.content {
+
 }

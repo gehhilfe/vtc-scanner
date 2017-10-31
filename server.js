@@ -64,6 +64,7 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
           catch (err) {
             p.errCounter += 1;
             p.sucCounter = 0;
+            p.last_offline = Date.now();
           }
           finally {
             await p.save();

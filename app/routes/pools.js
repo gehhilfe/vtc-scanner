@@ -19,13 +19,19 @@ module.exports = function (server) {
 
       let query = Pool.find({
         errCounter: 0,
-        local_stats: {$ne: null}
-      }).sort({
-        fee: 1
+        sucCounter: {$gt: 0}
       });
 
       if(req.query.sortfee) {
         query = query.sort({fee: req.query.sortfee});
+      }
+
+      if(req.query.sortactive_miners) {
+        query = query.sort({active_miners: req.query.sortactive_miners});
+      }
+
+      if(req.query.sorthash_rate) {
+        query = query.sort({hash_rate: req.query.sorthash_rate});
       }
 
       if (reqGeo && reqGeo.ll) {
@@ -45,7 +51,7 @@ module.exports = function (server) {
           result: pools,
           length: await Pool.find({
             errCounter: 0,
-            local_stats: {$ne: null}
+            sucCounter: {$gt: 0}
           }).count()
         });
       } else {

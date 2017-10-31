@@ -2,7 +2,7 @@
   <mat-table #table [dataSource]="dataSource" matSort>
     <!-- Country Column -->
     <ng-container matColumnDef="country">
-      <mat-header-cell *matHeaderCellDef>Country</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
       <mat-cell *matCellDef="let element">
             <img src="assets/blank.gif" class="flag flag-{{element.country.toLowerCase()}}"/>
       </mat-cell>
@@ -11,13 +11,25 @@
     <!-- IP Column -->
     <ng-container matColumnDef="ip">
       <mat-header-cell *matHeaderCellDef>IP</mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.ip}}</mat-cell>
+      <mat-cell *matCellDef="let element"> {{element.dns}}</mat-cell>
     </ng-container>
 
     <!-- Fee Column -->
     <ng-container matColumnDef="fee">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Fee</mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.fee}}</mat-cell>
+      <mat-cell *matCellDef="let element" class="numbercell"> {{element.fee}} %</mat-cell>
+    </ng-container>
+
+    <!-- Miners Column -->
+    <ng-container matColumnDef="active_miners">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Miners</mat-header-cell>
+      <mat-cell *matCellDef="let element" class="numbercell"> {{element.active_miners}}</mat-cell>
+    </ng-container>
+
+    <!-- Hashrate Column -->
+    <ng-container matColumnDef="hash_rate">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Hashrate</mat-header-cell>
+      <mat-cell *matCellDef="let element" class="numbercell"> {{element.hash_rate | hashRate}}</mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -28,13 +40,5 @@
                  [pageSizeOptions]="[5, 10, 25]"
                  (page)="changePage($event)">
   </mat-paginator>
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>Filter</mat-panel-title>
-      <mat-panel-title>Filter to find the perfect pool</mat-panel-title>
-    </mat-expansion-panel-header>
-  </mat-expansion-panel>
-
-
   <mat-progress-bar mode="query" *ngIf="bussy"></mat-progress-bar>
 </div>

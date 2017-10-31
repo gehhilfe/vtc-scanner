@@ -1,3 +1,16 @@
 .flag {
   vertical-align: middle;
 }
+
+
+.numbercell {
+}
+
+.mat-column-country {
+  flex: 0 0 50px;
+}
+
+
+.mat-column-fee, .mat-column-active_miners, .mat-column-hash_rate{
+  flex: 0 0 75px;
+}

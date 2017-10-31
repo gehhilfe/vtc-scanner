@@ -13,12 +13,14 @@ import { AddPoolFormComponent } from './add-pool-form/add-pool-form.component';
 import {HttpClientModule} from "@angular/common/http";
 import {PoolService} from "./pool.service";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { HashRatePipe } from './hash-rate.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     PoolTableComponent,
-    AddPoolFormComponent
+    AddPoolFormComponent,
+    HashRatePipe
   ],
   imports: [
     MatButtonModule,
