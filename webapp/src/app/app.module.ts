@@ -14,15 +14,19 @@ import {HttpClientModule} from "@angular/common/http";
 import {PoolService} from "./pool.service";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { HashRatePipe } from './hash-rate.pipe';
+import { UptimePipe } from './uptime.pipe';
+import {MomentModule} from "angular2-moment";
 
 @NgModule({
   declarations: [
     AppComponent,
     PoolTableComponent,
     AddPoolFormComponent,
-    HashRatePipe
+    HashRatePipe,
+    UptimePipe
   ],
   imports: [
+    MomentModule,
     MatButtonModule,
     MatToolbarModule,
     MatIconModule,

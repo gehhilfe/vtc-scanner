@@ -15,7 +15,7 @@ import {Subject} from "rxjs/Subject";
 })
 export class PoolTableComponent implements OnInit {
 
-  displayedColumns = ['country', 'ip', 'fee', 'active_miners', 'hash_rate'];
+  displayedColumns = ['country', 'ip', 'fee', 'active_miners', 'hash_rate', 'ping', 'uptime'];
   dataSource = new PoolDataSource();
 
   lastSort: Sort = {

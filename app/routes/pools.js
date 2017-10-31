@@ -34,6 +34,10 @@ module.exports = function (server) {
         query = query.sort({hash_rate: req.query.sorthash_rate});
       }
 
+      if(req.query.sortping) {
+        query = query.sort({ping: req.query.sortping});
+      }
+
       if (reqGeo && reqGeo.ll) {
         query = query.where('location')
           .near({

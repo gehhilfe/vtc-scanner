@@ -11,7 +11,7 @@
     <!-- IP Column -->
     <ng-container matColumnDef="ip">
       <mat-header-cell *matHeaderCellDef>IP</mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.dns}}</mat-cell>
+      <mat-cell *matCellDef="let element"> {{element.dns}}:{{element.port}}</mat-cell>
     </ng-container>
 
     <!-- Fee Column -->
@@ -30,6 +30,18 @@
     <ng-container matColumnDef="hash_rate">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Hashrate</mat-header-cell>
       <mat-cell *matCellDef="let element" class="numbercell"> {{element.hash_rate | hashRate}}</mat-cell>
+    </ng-container>
+
+    <!-- Reponsetime Column -->
+    <ng-container matColumnDef="ping">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Ping</mat-header-cell>
+      <mat-cell *matCellDef="let element" class="numbercell"> {{element.ping}} ms</mat-cell>
+    </ng-container>
+
+    <!-- Uptime Column -->
+    <ng-container matColumnDef="uptime">
+      <mat-header-cell *matHeaderCellDef>Uptime</mat-header-cell>
+      <mat-cell *matCellDef="let element" class="numbercell"> {{element.last_offline | uptime | amDuration:'ms'}}</mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

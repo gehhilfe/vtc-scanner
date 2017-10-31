@@ -11,6 +11,7 @@
 }
 
 
-.mat-column-fee, .mat-column-active_miners, .mat-column-hash_rate{
-  flex: 0 0 75px;
+.mat-column-fee, .mat-column-active_miners, .mat-column-hash_rate, .mat-column-ping, .mat-column-uptime{
+  flex: 0 0 100px;
+  text-align: right;
 }

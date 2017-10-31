@@ -20,6 +20,7 @@ export interface PoolDto {
   hash_rate: number,
   last_offline: Date,
   port: number,
+  ping: number,
   shares: {
     total: number,
     orphan: 53,
@@ -53,24 +54,33 @@ export class PoolService {
       .set('pageIndex', page.pageIndex.toString())
       .set('pageSize', page.pageSize.toString());
 
-    if(sort.active === "fee") {
-      if(sort.direction === "asc")
+    if (sort.active === "fee") {
+      if (sort.direction === "asc")
         httpParams = httpParams.set("sortfee", "1");
-      if(sort.direction === "desc")
+      if (sort.direction === "desc")
         httpParams = httpParams.set("sortfee", "-1");
     }
 
-    if(sort.active === "active_miners")
-      if(sort.direction === "asc")
+    if (sort.active === "active_miners") {
+      if (sort.direction === "asc")
         httpParams = httpParams.set("sortactive_miners", "1");
-    if(sort.direction === "desc")
-      httpParams = httpParams.set("sortactive_miners", "-1");
+      if (sort.direction === "desc")
+        httpParams = httpParams.set("sortactive_miners", "-1");
+    }
 
-    if(sort.active === "hash_rate")
-      if(sort.direction === "asc")
+    if (sort.active === "hash_rate") {
+      if (sort.direction === "asc")
         httpParams = httpParams.set("sorthash_rate", "1");
-    if(sort.direction === "desc")
-      httpParams = httpParams.set("sorthash_rate", "-1");
+      if (sort.direction === "desc")
+        httpParams = httpParams.set("sorthash_rate", "-1");
+    }
+
+    if (sort.active === "ping") {
+      if (sort.direction === "asc")
+        httpParams = httpParams.set("sortping", "1");
+      if (sort.direction === "desc")
+        httpParams = httpParams.set("sortping", "-1");
+    }
 
     return this.http
       .get<PaginatedPoolDto>(this.apiUrl, {

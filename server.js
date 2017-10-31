@@ -49,9 +49,24 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
               setTimeout(resolve, (Math.random() * 5 + 1) * 1000);
             });
             console.log('Update pool status of ' + p._id);
-            const peers = await p.getPeers();
 
+            let startTime = new Date();
+            const peers = await p.getPeers();
+            let endTime = new Date();
+
+            let diff = endTime-startTime;
+            startTime = new Date();
             await p.updateStats();
+            endTime = new Date();
+
+            diff += endTime-startTime;
+            diff /= 2;
+            if(!p.ping || p.ping === 0) {
+              p.ping = diff;
+            } else {
+              // Average over time
+              p.ping = Math.floor(p.ping*0.3 + p.ping*0.7);
+            }
             p.errCounter = 0;
             p.sucCounter += 1;
             await Promise.all(_.map(peers, async (it) => {
