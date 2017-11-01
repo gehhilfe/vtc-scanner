@@ -12,6 +12,7 @@
   "dependencies": {
     "addr-to-ip-port": "^1.4.2",
     "geoip-lite": "^1.2.1",
+    "ipaddr.js": "^1.5.4",
     "lodash": "^4.17.4",
     "mongoose": "^4.12.4",
     "restify": "^6.2.3",
