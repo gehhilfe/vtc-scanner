@@ -33,7 +33,14 @@ const config = {
     },
     vertcoin: {
       seeds: [
-        'fr1.vtconline.org'
+        'useast1.vtconline.org',
+        'fr1.vtconline.org',
+        'uk1.vtconline.org',
+        'vtc.alwayshashing.com',
+        'explorer.vertcoin.info',
+        'p2pool.kosmoplovci.org',
+        'crypto.office-on-the.net',
+        'mail.hoosieryouth.org'
       ],
       port: 5889,
       magic: [0xfa, 0xbf, 0xb5, 0xda]
@@ -57,7 +64,14 @@ const config = {
     },
     vertcoin: {
       seeds: [
-        'fr1.vtconline.org'
+        'useast1.vtconline.org',
+        'fr1.vtconline.org',
+        'uk1.vtconline.org',
+        'vtc.alwayshashing.com',
+        'explorer.vertcoin.info',
+        'p2pool.kosmoplovci.org',
+        'crypto.office-on-the.net',
+        'mail.hoosieryouth.org'
       ],
       port: 5889,
       magic: [0xfa, 0xbf, 0xb5, 0xda]

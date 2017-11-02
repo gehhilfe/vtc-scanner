@@ -17,8 +17,8 @@ class MessageHeader {
   constructor(headerBuffer) {
     let offset = 0;
     const validMagic = _.reduce(_.map(config.vertcoin.magic, (it) => it === headerBuffer.readUInt8(offset++)), (acc, it) => acc && it);
-    if (!validMagic)
-      throw new Error('Vertcoin MessageHeader wrong magic bytes');
+
+    this.invalidMaigc = !validMagic;
 
     const cmdBuf = headerBuffer.slice(4, 4 + 12);
 
@@ -62,9 +62,13 @@ class Message {
         command: 'verack'
       };
     } else if(this.header.command === 'addr') {
-      const length = this.body.readUInt8(0);
+      let offset = 0;
+      let length = this.body.readUInt8(offset++);
+      if(length === 0xFD) {
+        length = this.body.readUInt16LE(offset);
+        offset += 2;
+      }
       let addrs = [];
-      let offset = 1;
       for (let i = 0; i< length; i++) {
         let e = this._extractAddr(this.body, offset);
         offset = e.nextOffset;
@@ -128,16 +132,17 @@ class VertcoinClient extends EventEmitter {
     this.tcpSocket.on('data', this._recvBuffer(this));
 
     this.tcpSocket.on('error', (buf) => {
-      console.log(buf);
+      console.log('error socket');
     });
     this.tcpSocket.on('timeout', (buf) => {
-      console.log(buf);
+      console.log('timout socket');
     });
     this.tcpSocket.on('drain', (buf) => {
-      console.log(buf);
+      console.log('drain socket');
     });
     this.tcpSocket.on('close', (buf) => {
-      console.log(buf);
+      console.log('close socket');
+      this.emit('close');
     });
 
     this.on('message', (msg) => {
@@ -149,6 +154,9 @@ class VertcoinClient extends EventEmitter {
       }
       if (msg.header.command === 'ping') {
         this._sendPacket('pong', msg.body);
+      }
+      if(msg.header.command === 'sendheaders') {
+        this._sendPacket('headers', Buffer.alloc(1));
       }
       if (msg.header.command === 'verack') {
         this.emit('connected', this.peerInfo);
@@ -192,7 +200,8 @@ class VertcoinClient extends EventEmitter {
           buf.copy(self.bodyBuffer, self.bodyOffset, 0, bodyToRead);
           self.bodyOffset = self.lastHeader.payloadSize;
 
-          self.emit('message', new Message(self.lastHeader, self.bodyBuffer));
+          if(!self.lastHeader.invalidMaigc)
+            self.emit('message', new Message(self.lastHeader, self.bodyBuffer));
           self.currentState = STATE_READ_HEADER;
           self.headerOffset = 0;
 
@@ -224,6 +233,10 @@ class VertcoinClient extends EventEmitter {
         this.emit('connectionTimeout');
       }, this.connectionTimeout);
     });
+  }
+
+  close() {
+    this.tcpSocket.end();
   }
 
   sendVersion() {
@@ -288,6 +301,7 @@ class VertcoinClient extends EventEmitter {
    * @private
    */
   _sendPacket(command, buffer) {
+    console.log('Sending '+command);
     let length = 0;
     if (buffer)
       length = buffer.length;

@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const path = require('path');
+const dns = require('dns');
 
 const config = require(path.join(__dirname, '/config/config'));
 
@@ -28,6 +29,7 @@ server.use(
 
 models();
 const Pool = mongoose.model('Pool');
+const Node = mongoose.model('Node');
 routes(server);
 
 server.get(/.*/, restifyPlugins.serveStatic({
@@ -36,7 +38,59 @@ server.get(/.*/, restifyPlugins.serveStatic({
 }));
 
 mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongoClient: true})
-  .then(() => {
+  .then(async () => {
+
+
+    console.log('Removing all vertcoin nodes');
+    await Node.remove({});
+    await Promise.all(_.map(config.vertcoin.seeds, async (it) => {
+      let ip = _.head(await (new Promise((resolve,reject) => dns.resolve(it, (err, res) => {
+        if(err)
+          reject(err);
+        else
+          resolve(res);
+      }))));
+
+      return Node.create({
+        ip: ip,
+        port: config.vertcoin.port
+      });
+    }));
+    console.log('Seed notes added');
+
+    const nodeUpdateFunc = async () => {
+      const nodes = await Node.find({
+        errCounter: {$lt: 5}
+      }).sort({
+        updatedAt: 1
+      }).limit(10);
+      await Promise.all(_.map(nodes, async (n) => {
+        try {
+          let peers = await n.updateInfo();
+          peers =_.sortBy(peers, 'time');
+          await Promise.all(_.map(peers, async (it) => {
+            let n = await Node.findOne({
+              ip: it.ip
+            });
+            if(!n) {
+              n = await Node.create({
+                ip: it.ip,
+                port: config.vertcoin.port
+              });
+            }
+          }));
+        }
+        catch (err) {
+          n.errCounter += 1;
+        }
+        finally {
+          await n.save();
+        }
+      }));
+      setTimeout(nodeUpdateFunc, 1);
+    };
+    setTimeout(nodeUpdateFunc, 1);
+
     server.listen(8080, async () => {
       console.log('%s listening at %s', server.name, server.url);
 
@@ -85,8 +139,9 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
             await p.save();
           }
         }));
-        await scoreFunc();
-        setTimeout(updateFunc, 1);
+        if(await (Pool.count()) > 0)
+          await scoreFunc();
+        setTimeout(updateFunc, 30000);
       };
 
 
@@ -180,7 +235,7 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
               uptimeScore = 1;
           }
 
-          it.score = Math.round((pingScore+minerScore+hashRateScore+uptimeScore)/5);
+          it.score = Math.round((pingScore + minerScore + hashRateScore + uptimeScore) / 5);
           return it.save();
         }));
       };
