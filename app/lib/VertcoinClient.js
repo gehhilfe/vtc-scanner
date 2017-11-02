@@ -52,24 +52,24 @@ class Message {
         version: version,
         userAgent: userAgent
       };
-    } else if(this.header.command === 'ping') {
+    } else if (this.header.command === 'ping') {
       return {
         command: 'ping',
         nonce: this.body.readUInt32LE(0) << 32 + this.body.readUInt32LE(4)
       };
-    } else if(this.header.command === 'verack') {
+    } else if (this.header.command === 'verack') {
       return {
         command: 'verack'
       };
-    } else if(this.header.command === 'addr') {
+    } else if (this.header.command === 'addr') {
       let offset = 0;
       let length = this.body.readUInt8(offset++);
-      if(length === 0xFD) {
+      if (length === 0xFD) {
         length = this.body.readUInt16LE(offset);
         offset += 2;
       }
       let addrs = [];
-      for (let i = 0; i< length; i++) {
+      for (let i = 0; i < length; i++) {
         let e = this._extractAddr(this.body, offset);
         offset = e.nextOffset;
         delete e.nextOffset;
@@ -82,7 +82,7 @@ class Message {
       };
     }
     return {
-      err: 'Unkown command '+this.header.command
+      err: 'Unkown command ' + this.header.command
     };
   }
 
@@ -94,22 +94,22 @@ class Message {
     const serviceLow = buffer.readUInt32LE(offset);
     offset += 4;
 
-    let addr = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
+    let addr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     addr = _.map(addr, () => {
       return buffer.readUInt8(offset++);
     });
 
     let ipAddr = ip.fromByteArray(addr);
-    const flag = _.reduce(_.take(addr, 10), (acc,it)=> acc && it===0, true);
-    if(flag && addr[10] === 255 && addr[11] === 255) {
-      ipAddr = ip.fromByteArray(_.takeRight(addr,4));
+    const flag = _.reduce(_.take(addr, 10), (acc, it) => acc && it === 0, true);
+    if (flag && addr[10] === 255 && addr[11] === 255) {
+      ipAddr = ip.fromByteArray(_.takeRight(addr, 4));
     }
 
 
     const port = buffer.readUInt16BE(offset);
     offset += 2;
     return {
-      time: new Date(timestamp*1000),
+      time: new Date(timestamp * 1000),
       ip: ipAddr.toString(),
       port: port,
       nextOffset: offset
@@ -155,7 +155,7 @@ class VertcoinClient extends EventEmitter {
       if (msg.header.command === 'ping') {
         this._sendPacket('pong', msg.body);
       }
-      if(msg.header.command === 'sendheaders') {
+      if (msg.header.command === 'sendheaders') {
         this._sendPacket('headers', Buffer.alloc(1));
       }
       if (msg.header.command === 'verack') {
@@ -179,10 +179,11 @@ class VertcoinClient extends EventEmitter {
 
           // Parse header
           self.lastHeader = new MessageHeader(self.headerBuffer);
-          self.bodyBuffer = Buffer.alloc(self.lastHeader.payloadSize);
+          if (!self.lastHeader.invalidMaigc)
+            self.bodyBuffer = Buffer.alloc(self.lastHeader.payloadSize);
           self.bodyOffset = 0;
 
-          if(self.lastHeader.payloadSize === 0) {
+          if (self.lastHeader.payloadSize === 0) {
             self.emit('message', new Message(self.lastHeader, self.bodyBuffer));
             self.currentState = STATE_READ_HEADER;
             self.headerOffset = 0;
@@ -197,10 +198,11 @@ class VertcoinClient extends EventEmitter {
       if (self.currentState === STATE_READ_MSG) {
         const bodyToRead = self.lastHeader.payloadSize - self.bodyOffset;
         if (buf.length >= bodyToRead && bodyToRead > 0) {
-          buf.copy(self.bodyBuffer, self.bodyOffset, 0, bodyToRead);
+          if (!self.lastHeader.invalidMaigc)
+            buf.copy(self.bodyBuffer, self.bodyOffset, 0, bodyToRead);
           self.bodyOffset = self.lastHeader.payloadSize;
 
-          if(!self.lastHeader.invalidMaigc)
+          if (!self.lastHeader.invalidMaigc)
             self.emit('message', new Message(self.lastHeader, self.bodyBuffer));
           self.currentState = STATE_READ_HEADER;
           self.headerOffset = 0;
@@ -208,7 +210,8 @@ class VertcoinClient extends EventEmitter {
           if (buf.length > bodyToRead)
             self._recvBuffer(self)(buf.slice(bodyToRead));
         } else {
-          buf.copy(self.bodyBuffer, self.bodyOffset);
+          if (!self.lastHeader.invalidMaigc)
+            buf.copy(self.bodyBuffer, self.bodyOffset);
           self.bodyOffset += buf.length;
         }
       }
@@ -301,7 +304,7 @@ class VertcoinClient extends EventEmitter {
    * @private
    */
   _sendPacket(command, buffer) {
-    console.log('Sending '+command);
+    console.log('Sending ' + command);
     let length = 0;
     if (buffer)
       length = buffer.length;

@@ -43,14 +43,18 @@ class NodeClass {
       try {
         this.client = new VertcoinClient();
         this.client.on('message', (msg) => {
-          if (msg.header.command === 'verack')
-            this.client.getaddr();
-          if (msg.header.command === 'addr') {
-            if (this.client) {
-              this.client.close();
-              delete this.client;
+          try {
+            if (msg.header.command === 'verack')
+              this.client.getaddr();
+            if (msg.header.command === 'addr') {
+              if (this.client) {
+                this.client.close();
+                delete this.client;
+              }
+              resolve(msg.getInfo().addrs);
             }
-            resolve(msg.getInfo().addrs);
+          }catch(err) {
+            reject(err);
           }
         });
         this.client.on('close', () => {
