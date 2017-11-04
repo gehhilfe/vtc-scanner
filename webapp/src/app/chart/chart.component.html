@@ -1,0 +1,59 @@
+<div fxLayout="row" style="padding: 10px">
+  <div fxFlex="70">
+    <div style="display: block;">
+      <canvas baseChart
+              style="height:20px; width:80px;"
+              [datasets]="lineChartData"
+              [labels]="lineChartLabels"
+              [options]="lineChartOptions"
+              [colors]="lineChartColors"
+              [legend]="lineChartLegend"
+              [chartType]="lineChartType"
+              (chartHover)="chartHovered($event)"
+              (chartClick)="chartClicked($event)"></canvas>
+    </div>
+  </div>
+  <div>
+  </div>
+  <div fxFlex="30" class="stats">
+    <div fxLayout="column">
+      <div fxLayout="row">
+        <div fxFlex="25">
+          <h3>High:</h3>
+        </div>
+        <div fxFlex="75">
+          {{high}} {{unit}}
+        </div>
+      </div>
+      <div>
+        <div fxFlex="25">
+          <h3>Average:</h3>
+        </div>
+        <div fxFlex="75">
+          {{average}} {{unit}}
+        </div>
+      </div>
+      <div>
+        <div fxFlex="25">
+          <h3>Low:</h3>
+        </div>
+        <div fxFlex="75">
+          {{low}} {{unit}}
+        </div>
+      </div>
+      <div fxFlexAlign="center">
+        <mat-button-toggle-group #group="matButtonToggleGroup" (change)="timeScale($event)">
+          <mat-button-toggle value="short">
+            5 min.
+          </mat-button-toggle>
+          <mat-button-toggle value="middle">
+            1 h.
+          </mat-button-toggle>
+          <mat-button-toggle value="long">
+            1 d.
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+  </div>
+</div>

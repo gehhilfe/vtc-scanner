@@ -12,7 +12,7 @@ const routes = require(path.join(__dirname, '/app/routes/'));
 const restify = require('restify');
 const server = restify.createServer();
 const restifyPlugins = restify.plugins;
-
+const cron = require('node-cron');
 
 server.use(restifyPlugins.bodyParser());
 server.use(restifyPlugins.queryParser());
@@ -30,6 +30,7 @@ server.use(
 models();
 const Pool = mongoose.model('Pool');
 const Node = mongoose.model('Node');
+const StatisticEntry = mongoose.model('StatisticEntry');
 routes(server);
 
 server.get(/.*/, restifyPlugins.serveStatic({
@@ -40,12 +41,37 @@ server.get(/.*/, restifyPlugins.serveStatic({
 mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongoClient: true})
   .then(async () => {
 
+    cron.schedule('*/5 * * * *', async () => {
+      await StatisticEntry.create({
+        type: 'Miners',
+        value: await Pool.sumMiners()
+      });
+      await StatisticEntry.create({
+        type: 'Hashrate',
+        value: await Pool.sumHashrate()
+      });
+      await StatisticEntry.create({
+        type: 'AvgEfficency',
+        value: await Pool.averageEfficency()
+      });
+    });
+
+    // Remove Nodes and Pools with err count 5
+    cron.schedule('0 * * * *', async () => {
+      await Node.remove({
+        errCounter: {$gt: 4}
+      });
+      await Pool.remove({
+        errCounter: {$gt: 4}
+      });
+    });
+
 
     console.log('Removing all vertcoin nodes');
     await Node.remove({});
     await Promise.all(_.map(config.vertcoin.seeds, async (it) => {
-      let ip = _.head(await (new Promise((resolve,reject) => dns.resolve(it, (err, res) => {
-        if(err)
+      let ip = _.head(await (new Promise((resolve, reject) => dns.resolve(it, (err, res) => {
+        if (err)
           reject(err);
         else
           resolve(res);
@@ -67,12 +93,12 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
       await Promise.all(_.map(nodes, async (n) => {
         try {
           let peers = await n.updateInfo();
-          peers =_.sortBy(peers, 'time');
+          peers = _.sortBy(peers, 'time');
           await Promise.all(_.map(peers, async (it) => {
             let n = await Node.findOne({
               ip: it.ip
             });
-            if(!n) {
+            if (!n) {
               n = await Node.create({
                 ip: it.ip,
                 port: config.vertcoin.port
@@ -139,31 +165,16 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
             await p.save();
           }
         }));
-        if(await (Pool.count()) > 0)
+        if (await (Pool.count()) > 0)
           await scoreFunc();
         setTimeout(updateFunc, 30000);
       };
 
 
       const scoreFunc = async () => {
-        const avgPing = (await Pool.aggregate({
-          $group: {
-            _id: null,
-            total: {$avg: '$ping'}
-          }
-        }))[0].total;
-        const maxMiner = (await Pool.aggregate({
-          $group: {
-            _id: null,
-            total: {$max: '$active_miners'}
-          }
-        }))[0].total;
-        const maxHashRate = (await Pool.aggregate({
-          $group: {
-            _id: null,
-            total: {$max: '$hash_rate'}
-          }
-        }))[0].total;
+        const avgPing = await Pool.averagePing();
+        const maxMiner = await Pool.maxMiners();
+        const maxHashRate = await Pool.maxHashrate();
         const minOffline = (await Pool.aggregate({
           $group: {
             _id: null,

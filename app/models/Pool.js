@@ -42,13 +42,13 @@ const poolSchema = new Schema({
   donation_proportion: Number,
   location: {
     'type': {type: String, default: 'Point'},
-    coordinates: {type: [Number], default: [0,0]}
+    coordinates: {type: [Number], default: [0, 0]}
   },
   ping: {
     type: Number,
     default: 0.0
   },
-  last_offline: { type: Date, default: Date.now }
+  last_offline: {type: Date, default: Date.now}
 });
 
 poolSchema.index({location: '2dsphere'});
@@ -65,8 +65,8 @@ class PoolClass {
     return new Promise((resolve, reject) => {
       const client = restifyClients.createJSONClient({
         url: 'http://' + this.ip,
-        connectTimeout: 5*1000,
-        requestTimeout: 5*1000
+        connectTimeout: 5 * 1000,
+        requestTimeout: 5 * 1000
       });
 
       const ipPortSplit = addrToIPPort(this.ip);
@@ -85,22 +85,22 @@ class PoolClass {
           // Remove because of possible dotted field in miner address
           let numMiner = 0;
           let hashRate = 0;
-          if(obj.miner_hash_rates) {
+          if (obj.miner_hash_rates) {
             numMiner = _.keys(obj.miner_hash_rates).length;
-            hashRate = _.reduce(_.values(obj.miner_hash_rates), (acc, it) => acc+it);
+            hashRate = _.reduce(_.values(obj.miner_hash_rates), (acc, it) => acc + it);
           }
 
 
           this.hash_rate = hashRate;
           this.active_miners = numMiner;
-          this.efficency = obj.efficency;
+          this.efficiency = obj.efficiency;
           this.shares = obj.shares;
           this.donation_proportion = obj.donation_proportion;
           this.fee = obj.fee;
           this.version = obj.version;
           this.uptime = obj.uptime;
           dns.reverse(ipPortSplit[0], (err, hostnames) => {
-            if(err) {
+            if (err) {
               reject(err);
             } else {
               this.dns = hostnames[0];
@@ -121,8 +121,8 @@ class PoolClass {
     return new Promise((resolve, reject) => {
       const client = restifyClients.createJSONClient({
         url: 'http://' + this.ip,
-        connectTimeout: 5*1000,
-        requestTimeout: 5*1000
+        connectTimeout: 5 * 1000,
+        requestTimeout: 5 * 1000
       });
 
       client.get('/peer_addresses', (err, clientReq, clientRes, obj) => {
@@ -131,14 +131,14 @@ class PoolClass {
         } else {
           let peers = _.split(obj, ' ');
           peers = _.filter(_.map(peers, (it) => {
-            if(it.indexOf(':') === -1) {
-              it = it+':0';
+            if (it.indexOf(':') === -1) {
+              it = it + ':0';
             }
             const addr = addrToIPPort(it);
-            if(addr[1] === 0) {
+            if (addr[1] === 0) {
               addr[1] = self.getPort();
             }
-            return addr[0]+':'+addr[1];
+            return addr[0] + ':' + addr[1];
           }), (it) => {
             const addr = addrToIPPort(it);
             return addr[1] == 9171 || addr[1] == 9181;
@@ -155,6 +155,94 @@ class PoolClass {
     }).sort({
       updatedAt: 1
     }).limit(30);
+  }
+
+  static async averagePing() {
+    return (await Pool.aggregate([
+      {
+        $match: {
+          errCounter: {$lt: 5},
+          sucCounter: {$gt: 0}
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          total: {$avg: '$ping'}
+        }
+      }]))[0].total;
+  }
+
+  static async averageEfficency() {
+    let res = (await Pool.aggregate([
+      {
+        $match: {
+          errCounter: {$lt: 5},
+          sucCounter: {$gt: 0}
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          total: {$avg: '$efficiency'}
+        }
+      }]));
+    return res[0].total;
+  }
+
+  static async maxMiners() {
+    return (await Pool.aggregate([
+      {
+        $match: {
+          errCounter: {$lt: 5},
+          sucCounter: {$gt: 0}
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          total: {$max: '$active_miners'}
+        }
+      }]))[0].total;
+  }
+
+  static async sumMiners() {
+    return (await Pool.aggregate([
+      {
+        $match: {
+          errCounter: {$lt: 5},
+          sucCounter: {$gt: 0}
+        }
+      }, {
+        $group: {
+          _id: null,
+          total: {$sum: '$active_miners'}
+        }
+      }]))[0].total;
+  }
+
+  static async maxHashrate() {
+    return (await Pool.aggregate([
+      {
+        $match: {
+          errCounter: {$lt: 5},
+          sucCounter: {$gt: 0}
+        }
+      }, {
+        $group: {
+          _id: null,
+          total: {$max: '$hash_rate'}
+        }
+      }]))[0].total;
+  }
+
+  static async sumHashrate() {
+    return (await Pool.aggregate([{
+      $group: {
+        _id: null,
+        total: {$sum: '$hash_rate'}
+      }
+    }]))[0].total;
   }
 }
 

@@ -5,7 +5,8 @@ import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {
   MatButtonModule, MatIconModule, MatPaginatorModule, MatTableModule, MatToolbarModule, MatInputModule,
-  MatFormFieldModule, MatListModule, MatProgressBarModule, MatSlideToggleModule, MatExpansionModule, MatSortModule
+  MatFormFieldModule, MatListModule, MatProgressBarModule, MatSlideToggleModule, MatExpansionModule, MatSortModule,
+  MatTabsModule, MatButtonToggleModule
 } from "@angular/material";
 import { PoolTableComponent } from './pool-table/pool-table.component';
 import {FlexLayoutModule} from "@angular/flex-layout";
@@ -17,6 +18,9 @@ import { HashRatePipe } from './hash-rate.pipe';
 import { UptimePipe } from './uptime.pipe';
 import {MomentModule} from "angular2-moment";
 import { TimesPipe } from './times.pipe';
+import { ChartComponent } from './chart/chart.component';
+import {StatsService} from "./stats.service";
+import {ChartsModule} from "ng2-charts";
 
 @NgModule({
   declarations: [
@@ -25,7 +29,8 @@ import { TimesPipe } from './times.pipe';
     AddPoolFormComponent,
     HashRatePipe,
     UptimePipe,
-    TimesPipe
+    TimesPipe,
+    ChartComponent
   ],
   imports: [
     MomentModule,
@@ -33,23 +38,28 @@ import { TimesPipe } from './times.pipe';
     MatToolbarModule,
     MatIconModule,
     MatTableModule,
+    MatTabsModule,
     MatPaginatorModule,
     FlexLayoutModule,
     MatInputModule,
     MatFormFieldModule,
     MatProgressBarModule,
+    MatListModule,
     BrowserModule,
     MatListModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    MatButtonToggleModule,
     FormsModule,
     MatExpansionModule,
     MatSortModule,
     MatSlideToggleModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ChartsModule
   ],
   providers: [
-    PoolService
+    PoolService,
+    StatsService
   ],
   bootstrap: [AppComponent]
 })

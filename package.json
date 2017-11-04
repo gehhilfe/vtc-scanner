@@ -15,6 +15,7 @@
     "ipaddr.js": "^1.5.4",
     "lodash": "^4.17.4",
     "mongoose": "^4.12.4",
+    "node-cron": "^1.2.1",
     "restify": "^6.2.3",
     "restify-clients": "^1.5.2",
     "restify-plugins": "^1.6.0"
