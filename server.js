@@ -14,6 +14,8 @@ const server = restify.createServer();
 const restifyPlugins = restify.plugins;
 const cron = require('node-cron');
 
+const logger = require('./app/lib/logger');
+
 server.use(restifyPlugins.bodyParser());
 server.use(restifyPlugins.queryParser());
 server.use(restifyPlugins.gzipResponse());
@@ -67,8 +69,10 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
     });
 
 
-    console.log('Removing all vertcoin nodes');
+    logger.debug('Removing all vertcoin nodes and pools');
     await Node.remove({});
+    await Pool.remove({});
+
     await Promise.all(_.map(config.vertcoin.seeds, async (it) => {
       let ip = _.head(await (new Promise((resolve, reject) => dns.resolve(it, (err, res) => {
         if (err)
@@ -82,7 +86,7 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
         port: config.vertcoin.port
       });
     }));
-    console.log('Seed notes added');
+    logger.debug('Seed notes added');
 
     const nodeUpdateFunc = async () => {
       const nodes = await Node.find({
@@ -91,6 +95,7 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
         updatedAt: 1
       }).limit(10);
       await Promise.all(_.map(nodes, async (n) => {
+        logger.debug('Update vertcoin node status of '+n.ip);
         try {
           let peers = await n.updateInfo();
           peers = _.sortBy(peers, 'time');
@@ -118,7 +123,7 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
     setTimeout(nodeUpdateFunc, 1);
 
     server.listen(8080, async () => {
-      console.log('%s listening at %s', server.name, server.url);
+      logger.info('%s listening at %s', server.name, server.url);
 
       const updateFunc = async () => {
         const ps = await Pool.getToRefresh();
@@ -128,7 +133,7 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
             await new Promise(resolve => {
               setTimeout(resolve, (Math.random() * 5 + 1) * 1000);
             });
-            console.log('Update pool status of ' + p._id);
+            logger.debug('Update pool status of ' + p.ip);
 
             let startTime = new Date();
             const peers = await p.getPeers();
@@ -165,13 +170,13 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
             await p.save();
           }
         }));
-        if (await (Pool.count()) > 0)
-          await scoreFunc();
         setTimeout(updateFunc, 30000);
       };
 
 
       const scoreFunc = async () => {
+        if (await (Pool.count()) === 0)
+          return;
         const avgPing = await Pool.averagePing();
         const maxMiner = await Pool.maxMiners();
         const maxHashRate = await Pool.maxHashrate();
@@ -250,6 +255,7 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
           return it.save();
         }));
       };
+      cron.schedule('*/5 * * * *', scoreFunc());
 
       updateFunc();
     });

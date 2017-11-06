@@ -28,7 +28,7 @@ const nodeSchema = new Schema({
   }
 });
 
-nodeSchema.index({localtion: '2dsphere'});
+nodeSchema.index({location: '2dsphere'});
 nodeSchema.set('timestamps', true);
 
 class NodeClass {

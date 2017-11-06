@@ -2,8 +2,8 @@
 <mat-toolbar id="toolbar" color="primary">
   {{title}}
 
-  <button mat-button>POOLS</button>
-  <button mat-button>GET STARTED</button>
+  <button mat-button (click)="openPools()">POOLS</button>
+  <button mat-button (click)="openMining()">GET STARTED</button>
 </mat-toolbar>
 
 
@@ -14,45 +14,7 @@
 <div id="spacer">
 </div>
 
-<div fxLayout="row">
-  <div fxFlex></div>
-  <div fxFlex="75" class="box mat-elevation-z8">
-    <mat-tab-group>
-      <mat-tab label="Miners">
-        <app-chart [scale]="1" [type]="'Miners'"></app-chart>
-      </mat-tab>
-      <mat-tab label="Hashrate">
-        <app-chart [scale]="1000000" [type]="'Hashrate'" [unit]="'MHz'"></app-chart>
-      </mat-tab>
-      <mat-tab label="Efficiency">
-        <app-chart [scale]="0.01" [type]="'AvgEfficency'"  [unit]="'%'"></app-chart>
-      </mat-tab>
-    </mat-tab-group>
-  </div>
-  <div fxFlex></div>
-</div>
-
-<div id="spacer">
-</div>
-
-<div fxLayout="row">
-  <div fxFlex></div>
-  <div fxFlex="75" class="box">
-    <app-pool-table></app-pool-table>
-  </div>
-  <div fxFlex></div>
-</div>
-
-<div id="spacer">
-</div>
-
-<div fxLayout="row" style="margin-bottom: 150px">
-  <div fxFlex></div>
-  <div fxFlex="75" class="mat-elevation-z8 box">
-    <app-add-pool-form></app-add-pool-form>
-  </div>
-  <div fxFlex></div>
-</div>
+<router-outlet></router-outlet>
 
 <div id="spacer">
 </div>

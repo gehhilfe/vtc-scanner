@@ -10,6 +10,8 @@ const _ = require('lodash');
 const path = require('path');
 const config = require(path.join(__dirname, '../../config/config'));
 
+const logger = require('./logger');
+
 const STATE_READ_HEADER = 0;
 const STATE_READ_MSG = 1;
 
@@ -131,17 +133,7 @@ class VertcoinClient extends EventEmitter {
     this.currentState = STATE_READ_HEADER;
     this.tcpSocket.on('data', this._recvBuffer(this));
 
-    this.tcpSocket.on('error', (buf) => {
-      console.log('error socket');
-    });
-    this.tcpSocket.on('timeout', (buf) => {
-      console.log('timout socket');
-    });
-    this.tcpSocket.on('drain', (buf) => {
-      console.log('drain socket');
-    });
     this.tcpSocket.on('close', (buf) => {
-      console.log('close socket');
       this.emit('close');
     });
 
@@ -304,7 +296,7 @@ class VertcoinClient extends EventEmitter {
    * @private
    */
   _sendPacket(command, buffer) {
-    console.log('Sending ' + command);
+    logger.debug('Sending ' + command);
     let length = 0;
     if (buffer)
       length = buffer.length;

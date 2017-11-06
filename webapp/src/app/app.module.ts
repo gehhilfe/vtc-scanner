@@ -8,19 +8,28 @@ import {
   MatFormFieldModule, MatListModule, MatProgressBarModule, MatSlideToggleModule, MatExpansionModule, MatSortModule,
   MatTabsModule, MatButtonToggleModule
 } from "@angular/material";
-import { PoolTableComponent } from './pool-table/pool-table.component';
+import {PoolTableComponent} from './pool-table/pool-table.component';
 import {FlexLayoutModule} from "@angular/flex-layout";
-import { AddPoolFormComponent } from './add-pool-form/add-pool-form.component';
+import {AddPoolFormComponent} from './add-pool-form/add-pool-form.component';
 import {HttpClientModule} from "@angular/common/http";
 import {PoolService} from "./pool.service";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import { HashRatePipe } from './hash-rate.pipe';
-import { UptimePipe } from './uptime.pipe';
+import {HashRatePipe} from './hash-rate.pipe';
+import {UptimePipe} from './uptime.pipe';
 import {MomentModule} from "angular2-moment";
-import { TimesPipe } from './times.pipe';
-import { ChartComponent } from './chart/chart.component';
+import {TimesPipe} from './times.pipe';
+import {ChartComponent} from './chart/chart.component';
 import {StatsService} from "./stats.service";
 import {ChartsModule} from "ng2-charts";
+import {PoolComponent} from './pool/pool.component';
+import {RouterModule, Routes} from "@angular/router";
+
+const appRoutes: Routes = [
+  {
+    path: '',
+    component: PoolComponent
+  }
+];
 
 @NgModule({
   declarations: [
@@ -30,7 +39,8 @@ import {ChartsModule} from "ng2-charts";
     HashRatePipe,
     UptimePipe,
     TimesPipe,
-    ChartComponent
+    ChartComponent,
+    PoolComponent
   ],
   imports: [
     MomentModule,
@@ -55,7 +65,8 @@ import {ChartsModule} from "ng2-charts";
     MatSortModule,
     MatSlideToggleModule,
     ReactiveFormsModule,
-    ChartsModule
+    ChartsModule,
+    RouterModule.forRoot(appRoutes)
   ],
   providers: [
     PoolService,
