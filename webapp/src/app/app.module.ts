@@ -6,7 +6,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {
   MatButtonModule, MatIconModule, MatPaginatorModule, MatTableModule, MatToolbarModule, MatInputModule,
   MatFormFieldModule, MatListModule, MatProgressBarModule, MatSlideToggleModule, MatExpansionModule, MatSortModule,
-  MatTabsModule, MatButtonToggleModule
+  MatTabsModule, MatButtonToggleModule, MatCardModule, MatDialogModule, MatProgressSpinnerModule
 } from "@angular/material";
 import {PoolTableComponent} from './pool-table/pool-table.component';
 import {FlexLayoutModule} from "@angular/flex-layout";
@@ -23,11 +23,31 @@ import {StatsService} from "./stats.service";
 import {ChartsModule} from "ng2-charts";
 import {PoolComponent} from './pool/pool.component';
 import {RouterModule, Routes} from "@angular/router";
-
+import {MiningComponent} from './mining/mining.component';
+import {NodeComponent} from './node/node.component';
+import {AgmCoreModule, GoogleMapsAPIWrapper} from '@agm/core';
+import {NodeService} from "./node.service";
+import {AgmJsMarkerClustererModule, ClusterManager} from '@agm/js-marker-clusterer';
+import {AngularFontAwesomeModule} from "angular-font-awesome";
+import { DonateDialogComponent } from './donate-dialog/donate-dialog.component';
+import {ClipboardModule} from "ngx-clipboard/dist";
 const appRoutes: Routes = [
   {
-    path: '',
+    path: 'pools',
     component: PoolComponent
+  },
+  {
+    path: 'mining',
+    component: MiningComponent
+  },
+  {
+    path: 'nodes',
+    component: NodeComponent
+  },
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: '/pools'
   }
 ];
 
@@ -40,9 +60,16 @@ const appRoutes: Routes = [
     UptimePipe,
     TimesPipe,
     ChartComponent,
-    PoolComponent
+    PoolComponent,
+    MiningComponent,
+    NodeComponent,
+    DonateDialogComponent
   ],
   imports: [
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyBPnvee1X_h5dmYlQLj77rb6evHQC8NxRQ'
+    }),
+    AgmJsMarkerClustererModule,
     MomentModule,
     MatButtonModule,
     MatToolbarModule,
@@ -63,14 +90,25 @@ const appRoutes: Routes = [
     FormsModule,
     MatExpansionModule,
     MatSortModule,
+    MatCardModule,
     MatSlideToggleModule,
     ReactiveFormsModule,
+    AngularFontAwesomeModule,
     ChartsModule,
+    MatDialogModule,
+    ClipboardModule,
+    MatProgressSpinnerModule,
     RouterModule.forRoot(appRoutes)
+  ],
+  entryComponents: [
+    DonateDialogComponent
   ],
   providers: [
     PoolService,
-    StatsService
+    StatsService,
+    NodeService,
+    ClusterManager,
+    GoogleMapsAPIWrapper
   ],
   bootstrap: [AppComponent]
 })

@@ -35,15 +35,26 @@ const Node = mongoose.model('Node');
 const StatisticEntry = mongoose.model('StatisticEntry');
 routes(server);
 
+
 server.get(/.*/, restifyPlugins.serveStatic({
   directory: './webapp/dist',
   default: 'index.html'
 }));
 
+const serveIndex = restifyPlugins.serveStatic({
+  directory: './webapp/dist',
+  file: 'index.html'
+});
+
+server.on('NotFound', (req, res, err, next) => {
+  serveIndex(req, res, next);
+});
+
 mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongoClient: true})
   .then(async () => {
 
     cron.schedule('*/5 * * * *', async () => {
+      logger.info('Creating 5min statistics');
       await StatisticEntry.create({
         type: 'Miners',
         value: await Pool.sumMiners()
@@ -53,8 +64,44 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
         value: await Pool.sumHashrate()
       });
       await StatisticEntry.create({
-        type: 'AvgEfficency',
-        value: await Pool.averageEfficency()
+        type: 'AvgEfficiency',
+        value: await Pool.averageEfficiency()
+      });
+    });
+
+    cron.schedule('0 * * * *', async () => {
+      logger.info('Creating 1h statistics');
+      const currentDate = new Date();
+      const fromDate = new Date(currentDate - 1000 * 3600); // minus 1 hour
+      await StatisticEntry.create({
+        type: 'Miners1h',
+        value: await StatisticEntry.avgCombine('Miners', fromDate, currentDate)
+      });
+      await StatisticEntry.create({
+        type: 'Hashrate1h',
+        value: await StatisticEntry.avgCombine('Hashrate', fromDate, currentDate)
+      });
+      await StatisticEntry.create({
+        type: 'AvgEfficiency1h',
+        value: await StatisticEntry.avgCombine('AvgEfficiency', fromDate, currentDate)
+      });
+    });
+
+    cron.schedule('0 0 * * *', async () => {
+      logger.info('Creating 1d statistics');
+      const currentDate = new Date();
+      const fromDate = currentDate - 1000 * 3600 * 24; // minus 24 hours
+      await StatisticEntry.create({
+        type: 'Miners1d',
+        value: await StatisticEntry.avgCombine('Miners1h', fromDate, currentDate)
+      });
+      await StatisticEntry.create({
+        type: 'Hashrate1d',
+        value: await StatisticEntry.avgCombine('Hashrate1h', fromDate, currentDate)
+      });
+      await StatisticEntry.create({
+        type: 'AvgEfficiency1d',
+        value: await StatisticEntry.avgCombine('AvgEfficiency1h', fromDate, currentDate)
       });
     });
 
@@ -69,9 +116,9 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
     });
 
 
-    logger.debug('Removing all vertcoin nodes and pools');
-    await Node.remove({});
-    await Pool.remove({});
+    logger.info('Removing all vertcoin nodes and pools');
+    //await Node.remove({});
+    //await Pool.remove({});
 
     await Promise.all(_.map(config.vertcoin.seeds, async (it) => {
       let ip = _.head(await (new Promise((resolve, reject) => dns.resolve(it, (err, res) => {
@@ -81,12 +128,13 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
           resolve(res);
       }))));
 
-      return Node.create({
-        ip: ip,
-        port: config.vertcoin.port
-      });
+      if ((await Node.find({ip: ip}).count()) === 0)
+        Node.create({
+          ip: ip,
+          port: config.vertcoin.port
+        });
     }));
-    logger.debug('Seed notes added');
+    logger.info('Seed notes added');
 
     const nodeUpdateFunc = async () => {
       const nodes = await Node.find({
@@ -95,9 +143,10 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
         updatedAt: 1
       }).limit(10);
       await Promise.all(_.map(nodes, async (n) => {
-        logger.debug('Update vertcoin node status of '+n.ip);
+        logger.debug('Update vertcoin node status of ' + n.ip);
         try {
           let peers = await n.updateInfo();
+          n.sucCounter += 1;
           peers = _.sortBy(peers, 'time');
           await Promise.all(_.map(peers, async (it) => {
             let n = await Node.findOne({
@@ -177,6 +226,8 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
       const scoreFunc = async () => {
         if (await (Pool.count()) === 0)
           return;
+        logger.info('Updating pool score');
+
         const avgPing = await Pool.averagePing();
         const maxMiner = await Pool.maxMiners();
         const maxHashRate = await Pool.maxHashrate();
@@ -255,7 +306,7 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
           return it.save();
         }));
       };
-      cron.schedule('*/5 * * * *', scoreFunc());
+      cron.schedule('*/5 * * * *', scoreFunc);
 
       updateFunc();
     });

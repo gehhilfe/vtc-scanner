@@ -176,7 +176,7 @@ class PoolClass {
       }]))[0].total;
   }
 
-  static async averageEfficency() {
+  static async averageEfficiency() {
     let res = (await Pool.aggregate([
       {
         $match: {

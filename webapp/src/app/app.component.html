@@ -3,6 +3,7 @@
   {{title}}
 
   <button mat-button (click)="openPools()">POOLS</button>
+  <button mat-button (click)="openNodes()">NODES</button>
   <button mat-button (click)="openMining()">GET STARTED</button>
 </mat-toolbar>
 
@@ -21,18 +22,18 @@
 
 <div id="footer" color="primary">
   GET INVOLVED
-  <div class="button-row">
+  <div class="button-row" fxHide.lt-sm="true">
     <button mat-fab>
-      <mat-icon>favorite</mat-icon>
+      <fa name="heart" size="2x"></fa>
     </button>
     <button mat-fab>
-      <mat-icon>favorite</mat-icon>
+      <fa name="reddit" size="2x"></fa>
+    </button>
+    <button mat-fab (click)="openDonate()">
+      <fa name="usd" size="2x"></fa>
     </button>
     <button mat-fab>
-      <mat-icon>favorite</mat-icon>
-    </button>
-    <button mat-fab>
-      <mat-icon>favorite</mat-icon>
+      <fa name="github" size="2x"></fa>
     </button>
   </div>
 </div>

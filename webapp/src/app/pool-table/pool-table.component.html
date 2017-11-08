@@ -1,4 +1,4 @@
-<div class="mat-elevation-z8">
+<div class="mat-elevation-z2">
   <mat-table #table [dataSource]="dataSource" matSort>
     <!-- Country Column -->
     <ng-container matColumnDef="country">
@@ -26,32 +26,32 @@
 
     <!-- Fee Column -->
     <ng-container matColumnDef="fee">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Fee</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header mat->Fee</mat-header-cell>
       <mat-cell *matCellDef="let element" class="numbercell"> {{element.fee}} %</mat-cell>
     </ng-container>
 
     <!-- Miners Column -->
     <ng-container matColumnDef="active_miners">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Miners</mat-header-cell>
-      <mat-cell *matCellDef="let element" class="numbercell"> {{element.active_miners}}</mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header fxHide.lt-sm="true">Miners</mat-header-cell>
+      <mat-cell *matCellDef="let element" class="numbercell" fxHide.lt-sm="true"> {{element.active_miners}}</mat-cell>
     </ng-container>
 
     <!-- Hashrate Column -->
     <ng-container matColumnDef="hash_rate">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Hashrate</mat-header-cell>
-      <mat-cell *matCellDef="let element" class="numbercell"> {{element.hash_rate | hashRate}}</mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header fxHide.lt-sm="true">Hashrate</mat-header-cell>
+      <mat-cell *matCellDef="let element" class="numbercell" fxHide.lt-sm="true"> {{element.hash_rate | hashRate}}</mat-cell>
     </ng-container>
 
     <!-- Reponsetime Column -->
     <ng-container matColumnDef="ping">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Ping</mat-header-cell>
-      <mat-cell *matCellDef="let element" class="numbercell"> {{element.ping}} ms</mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header fxHide.lt-md="true">Ping</mat-header-cell>
+      <mat-cell *matCellDef="let element" class="numbercell" fxHide.lt-md="true"> {{element.ping}} ms</mat-cell>
     </ng-container>
 
     <!-- Uptime Column -->
     <ng-container matColumnDef="uptime">
-      <mat-header-cell *matHeaderCellDef>Uptime</mat-header-cell>
-      <mat-cell *matCellDef="let element" class="numbercell"> {{element.last_offline | uptime | amDuration:'ms'}}
+      <mat-header-cell *matHeaderCellDef fxHide.lt-md="true">Uptime</mat-header-cell>
+      <mat-cell *matCellDef="let element" class="numbercell" fxHide.lt-md="true"> {{element.last_offline | uptime | amDuration:'ms'}}
       </mat-cell>
     </ng-container>
 

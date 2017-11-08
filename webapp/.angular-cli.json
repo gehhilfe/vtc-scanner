@@ -10,7 +10,6 @@
       "assets": [
         "assets",
         "favicon.ico",
-        "flags.png",
         "blank.gif"
       ],
       "index": "index.html",
@@ -22,7 +21,8 @@
       "prefix": "app",
       "styles": [
         "styles.scss",
-        "flags.min.css"
+        "flags.min.css",
+        "../node_modules/font-awesome/css/font-awesome.css"
       ],
       "scripts": [
         "../node_modules/chart.js/dist/Chart.bundle.js"

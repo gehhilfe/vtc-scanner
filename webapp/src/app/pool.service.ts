@@ -47,6 +47,7 @@ export class PoolService {
   addPool(ip: String): Observable<PoolDto> {
     return this.http
       .post<PoolDto>(this.apiUrl, JSON.stringify({ip: ip}), {headers: this.headers})
+      .delay(20000)
   }
 
   listPools(page: PageEvent, sort: Sort) {

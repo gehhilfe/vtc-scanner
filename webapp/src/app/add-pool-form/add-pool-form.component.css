@@ -6,3 +6,7 @@
 #inputrow button {
   margin: 10px;
 }
+
+button mat-progress-spinner {
+  margin: 4px 10px;
+}

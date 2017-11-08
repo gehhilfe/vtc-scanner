@@ -1,39 +1,39 @@
-<div fxLayout="row">
-  <div fxFlex></div>
-  <div fxFlex="75" class="box mat-elevation-z8">
+<div fxLayout="row" fxHide.lt-md="true">
+  <div fxFlex fxShow fxHide.lt-lg="true"></div>
+  <div fxFlex="75" fxFlex.lt-lg="" class="box mat-elevation-z2">
     <mat-tab-group>
       <mat-tab label="Miners">
         <app-chart [scale]="1" [type]="'Miners'"></app-chart>
       </mat-tab>
       <mat-tab label="Hashrate">
-        <app-chart [scale]="1000000" [type]="'Hashrate'" [unit]="'MHz'"></app-chart>
+        <app-chart [scale]="1000000" [type]="'Hashrate'" [unit]="'MH/s'"></app-chart>
       </mat-tab>
       <mat-tab label="Efficiency">
-        <app-chart [scale]="0.01" [type]="'AvgEfficency'"  [unit]="'%'"></app-chart>
+        <app-chart [scale]="0.01" [type]="'AvgEfficency'" [unit]="'%'"></app-chart>
       </mat-tab>
     </mat-tab-group>
   </div>
-  <div fxFlex></div>
+  <div fxFlex fxShow fxHide.lt-lg="true"></div>
 </div>
 
-<div id="spacer">
+<div id="spacer" fxHide.lt-md="true">
 </div>
 
 <div fxLayout="row">
-  <div fxFlex></div>
-  <div fxFlex="75" class="box">
+  <div fxFlex fxShow fxHide.lt-lg="true"></div>
+  <div fxFlex="75" fxFlex.lt-lg="" class="box">
     <app-pool-table></app-pool-table>
   </div>
-  <div fxFlex></div>
+  <div fxFlex fxShow fxHide.lt-lg="true"></div>
 </div>
 
-<div id="spacer">
+<div id="spacer" fxHide.lt-sm="true">
 </div>
 
-<div fxLayout="row" style="margin-bottom: 150px">
-  <div fxFlex></div>
-  <div fxFlex="75" class="mat-elevation-z8 box">
+<div fxLayout="row" style="margin-bottom: 150px" fxHide.lt-sm="true">
+  <div fxFlex fxShow fxHide.lt-lg="true"></div>
+  <div fxFlex="75" fxFlex.lt-lg="" class="mat-elevation-z2 box">
     <app-add-pool-form></app-add-pool-form>
   </div>
-  <div fxFlex></div>
+  <div fxFlex fxShow fxHide.lt-lg="true"></div>
 </div>

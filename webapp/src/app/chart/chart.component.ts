@@ -2,6 +2,7 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {StatsDto, StatsService} from "../stats.service";
 import {BaseChartDirective} from "ng2-charts";
 import {DateFormatPipe, MomentModule} from "angular2-moment";
+import {MatButtonToggleChange} from "@angular/material";
 
 @Component({
   selector: 'app-chart',
@@ -69,7 +70,11 @@ export class ChartComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.statsService.getStats(this.type).subscribe((res) => {
+    this.loadData('');
+  }
+
+  loadData(scale) {
+    this.statsService.getStats(this.type+scale).subscribe((res) => {
       this.data = res;
       this.lineChartLabels = res.map((it) => new DateFormatPipe().transform(it.date, 'LT'));
       this.chart.chart.config.data.labels = this.lineChartLabels;
@@ -84,7 +89,17 @@ export class ChartComponent implements OnInit {
     })
   }
 
-  timeScale(event: Event) {
-    console.log(event);
+  timeScale(event: MatButtonToggleChange) {
+    switch(event.value) {
+      case "short":
+        this.loadData('');
+        break;
+      case "middle":
+        this.loadData('1h');
+        break;
+      case "long":
+        this.loadData('1d');
+        break;
+    }
   }
 }

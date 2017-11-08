@@ -97,7 +97,6 @@ class PoolDataSource extends DataSource<any> {
   }
 
   disconnect(collectionViewer: CollectionViewer): void {
-    throw new Error("Method not implemented.");
   }
 
   setData(result) {

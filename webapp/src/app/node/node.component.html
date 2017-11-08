@@ -1,0 +1,21 @@
+<div fxLayout="row">
+  <div fxFlex fxHide.lt-lg="true"></div>
+  <div fxFlex="75" fxFlex.lt-lg="" class="box">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Vertcoin Nodes Worldwide</mat-card-title>
+        <mat-card-subtitle>Start your own node and support the network!</mat-card-subtitle>
+      </mat-card-header>
+      <agm-map [latitude]="lat" [longitude]="lng" [zoom]="1">
+        <agm-marker-cluster [imagePath]="'assets/m'">
+        <ng-template ngFor let-node [ngForOf]="nodes">
+          <agm-marker [latitude]="node.location.coordinates[1]"
+                      [longitude]="node.location.coordinates[0]"
+                      [iconUrl]="'assets/vtc_small.png'"></agm-marker>
+        </ng-template>
+        </agm-marker-cluster>
+      </agm-map>
+    </mat-card>
+  </div>
+  <div fxFlex fxHide.lt-lg="true"></div>
+</div>

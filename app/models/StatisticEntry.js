@@ -23,5 +23,36 @@ const statisticEntrySchema = new Schema({
   }
 });
 
+class StatisticEntryClass {
+
+  static async avgCombine(type, from, to) {
+    const res = await StatisticEntry.aggregate([
+      {
+        $match:
+          {
+            type: type,
+            date:
+              {
+                $gt: from, $lt: to
+              }
+          }
+      },
+      {
+        $group: {
+          _id: null,
+          total:
+            {
+              $avg: '$value'
+            }
+        }
+      }]);
+    if (res && res.length !== 0)
+      return res[0].total;
+    else
+      return 0;
+  }
+}
+
+statisticEntrySchema.loadClass(StatisticEntryClass);
 const StatisticEntry = mongoose.model('StatisticEntry', statisticEntrySchema);
 module.exports = StatisticEntry;
