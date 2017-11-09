@@ -106,6 +106,22 @@
           To see and read all Vertcoin related news and improvements join the Vertcoin community and spread information
           about Vertcoin.
           Join the Vertcoin Discord or Reddit and engage with other Vertcoin enthusiasts.
+
+          <div class="button-row" fxLayout="row">
+            <div fxFlex></div>
+            <div fxFlex fxFlexAlign="center" fxLayoutAlign="center">
+              <button mat-fab (click)="openLink('https://discord.gg/SUy9Hsr')">
+                <mat-icon svgIcon="discord"></mat-icon>
+              </button>
+            </div>
+            <div fxFlex></div>
+            <div fxFlex fxFlexAlign="center" fxLayoutAlign="center">
+              <button mat-fab (click)="openLink('https://www.reddit.com/r/vertcoin')">
+                <mat-icon svgIcon="reddit"></mat-icon>
+              </button>
+            </div>
+            <div fxFlex></div>
+          </div>
         </div>
       </mat-step>
     </mat-vertical-stepper>

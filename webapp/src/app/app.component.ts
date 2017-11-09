@@ -1,7 +1,8 @@
 import {Component} from '@angular/core';
 import {Router} from "@angular/router";
-import {MatDialog} from "@angular/material";
+import {MatDialog, MatIconRegistry} from "@angular/material";
 import {DonateDialogComponent} from "./donate-dialog/donate-dialog.component";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,18 @@ import {DonateDialogComponent} from "./donate-dialog/donate-dialog.component";
 export class AppComponent {
   title = 'Vertcoin Scanner';
 
-  constructor(private router: Router, private dialog: MatDialog) {
+  constructor(private router: Router, private dialog: MatDialog,
+              private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer) {
+    this.iconRegistry.addSvgIcon('discord',
+      sanitizer.bypassSecurityTrustResourceUrl('/assets/discord.svg'));
+    this.iconRegistry.addSvgIcon('donate',
+      sanitizer.bypassSecurityTrustResourceUrl('/assets/donate.svg'));
+    this.iconRegistry.addSvgIcon('reddit',
+      sanitizer.bypassSecurityTrustResourceUrl('/assets/reddit.svg'));
+    this.iconRegistry.addSvgIcon('github',
+      sanitizer.bypassSecurityTrustResourceUrl('/assets/github.svg'));
+    this.iconRegistry.addSvgIcon('star',
+      sanitizer.bypassSecurityTrustResourceUrl('/assets/star.svg'));
   };
 
   openPools() {

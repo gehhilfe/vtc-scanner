@@ -12,4 +12,7 @@ export class MiningComponent implements OnInit {
   ngOnInit() {
   }
 
+  openLink(url: string) {
+    window.location.href = url;
+  }
 }

@@ -6,7 +6,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {
   MatButtonModule, MatIconModule, MatPaginatorModule, MatTableModule, MatToolbarModule, MatInputModule,
   MatFormFieldModule, MatListModule, MatProgressBarModule, MatSlideToggleModule, MatExpansionModule, MatSortModule,
-  MatTabsModule, MatButtonToggleModule, MatCardModule, MatDialogModule, MatProgressSpinnerModule, MatStepperModule
+  MatTabsModule, MatButtonToggleModule, MatCardModule, MatDialogModule, MatProgressSpinnerModule, MatStepperModule,
+  MatIconRegistry
 } from "@angular/material";
 import {PoolTableComponent} from './pool-table/pool-table.component';
 import {FlexLayoutModule} from "@angular/flex-layout";
@@ -28,9 +29,9 @@ import {NodeComponent} from './node/node.component';
 import {AgmCoreModule, GoogleMapsAPIWrapper} from '@agm/core';
 import {NodeService} from "./node.service";
 import {AgmJsMarkerClustererModule, ClusterManager} from '@agm/js-marker-clusterer';
-import {AngularFontAwesomeModule} from "angular-font-awesome";
 import { DonateDialogComponent } from './donate-dialog/donate-dialog.component';
 import {ClipboardModule} from "ngx-clipboard/dist";
+import {HttpModule} from "@angular/http";
 const appRoutes: Routes = [
   {
     path: 'pools',
@@ -89,11 +90,11 @@ const appRoutes: Routes = [
     MatButtonToggleModule,
     FormsModule,
     MatExpansionModule,
+    HttpModule,
     MatSortModule,
     MatCardModule,
     MatSlideToggleModule,
     ReactiveFormsModule,
-    AngularFontAwesomeModule,
     ChartsModule,
     MatDialogModule,
     ClipboardModule,

@@ -103,7 +103,7 @@ body {
   background-color: $primary-color;
 }
 
-#footer .button-row button {
+.button-row button {
   margin: 15px 25px;
 }
 
@@ -122,4 +122,27 @@ body {
 
 .content {
 
+}
+
+a {
+  color: $primary-color-light;
+  display: inline-block;
+  position: relative;
+  text-decoration: none;
+  &:before {
+    background-color:$primary-color-light;
+    content: '';
+    height: 2px;
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: width 0.3s ease-in-out;
+    width: 100%;
+  }
+  &:hover {
+    &:before {
+      width: 0;
+    }
+  }
 }

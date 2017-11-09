@@ -12,9 +12,7 @@
     <ng-container matColumnDef="score">
       <mat-header-cell *matHeaderCellDef></mat-header-cell>
       <mat-cell *matCellDef="let element">
-        <mat-icon color="primary" *ngIf="element.score == 4">star</mat-icon>
-        <mat-icon color="black" *ngIf="element.score == 3">star</mat-icon>
-        <mat-icon color="warn" *ngIf="element.score < 3">star</mat-icon>
+        <mat-icon color="primary" *ngIf="element.score == 4" svgIcon="star"></mat-icon>
       </mat-cell>
     </ng-container>
 
