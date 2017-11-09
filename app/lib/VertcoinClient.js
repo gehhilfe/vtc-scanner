@@ -137,6 +137,10 @@ class VertcoinClient extends EventEmitter {
       this.emit('close');
     });
 
+    this.tcpSocket.on('error', () => {
+      this.emit('close');
+    });
+
     this.on('message', (msg) => {
       if (msg.header.command === 'version') {
         const info = msg.getInfo();
@@ -218,15 +222,22 @@ class VertcoinClient extends EventEmitter {
    */
   connect(host, port) {
     return new Promise((resolve, reject) => {
-      this.once('connected', resolve);
-      this.tcpSocket.connect(port, host, () => {
-        this.sendVersion();
-      });
+      try {
+        this.once('connected', resolve);
+        this.once('close', reject);
 
-      setTimeout(() => {
-        reject();
-        this.emit('connectionTimeout');
-      }, this.connectionTimeout);
+        this.tcpSocket.connect(port, host, () => {
+          this.sendVersion();
+        });
+
+        setTimeout(() => {
+          reject();
+          this.emit('connectionTimeout');
+        }, this.connectionTimeout);
+      }
+      catch (err) {
+        reject(err);
+      }
     });
   }
 

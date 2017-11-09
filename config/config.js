@@ -7,7 +7,7 @@ const rootPath = path.normalize(__dirname + '/..');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const NODE_HOST = process.env.NODE_HOST || '127.0.0.1';
-const NODE_PORT = process.env.NODE_PORT || 3000;
+const NODE_PORT = process.env.NODE_PORT || 8080;
 const MONGO_HOST = process.env.MONGO_HOST || '127.0.0.1';
 const MONGO_PORT = process.env.MONGO_PORT || 27017;
 const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
@@ -29,7 +29,18 @@ const config = {
     },
     log: {
       name: APP_NAME + NODE_ENV,
-      level: LOG_LEVEL
+      level: LOG_LEVEL,
+      exceptions: true
+    },
+    p2pool: {
+      net1: {
+        seeds: 'vtc.alwayshashing.com crypto.office-on-the.net pool.vtconline.org p2pool.kosmoplovci.org uk1.vtconline.org pool.boxienet.net'.split(' '),
+        port: 9171
+      },
+      net2: {
+        seeds: 'vtc2.alwayshashing.com pool.vtconline.org uk1.vtconline.org pool.boxienet.net'.split(' '),
+        port: 9181
+      }
     },
     vertcoin: {
       seeds: [
@@ -60,7 +71,18 @@ const config = {
     },
     log: {
       name: APP_NAME + NODE_ENV,
-      level: LOG_LEVEL
+      level: LOG_LEVEL,
+      exceptions: true
+    },
+    p2pool: {
+      net1: {
+        seeds: 'vtc.alwayshashing.com crypto.office-on-the.net pool.vtconline.org p2pool.kosmoplovci.org uk1.vtconline.org pool.boxienet.net'.split(' '),
+        port: 9171
+      },
+      net2: {
+        seeds: 'vtc2.alwayshashing.com pool.vtconline.org uk1.vtconline.org pool.boxienet.net'.split(' '),
+        port: 9181
+      }
     },
     vertcoin: {
       seeds: [
@@ -91,7 +113,18 @@ const config = {
     },
     log: {
       name: APP_NAME + NODE_ENV,
-      level: LOG_LEVEL
+      level: LOG_LEVEL,
+      exceptions: true
+    },
+    p2pool: {
+      net1: {
+        seeds: 'vtc.alwayshashing.com crypto.office-on-the.net pool.vtconline.org p2pool.kosmoplovci.org uk1.vtconline.org pool.boxienet.net'.split(' '),
+        port: 9171
+      },
+      net2: {
+        seeds: 'vtc2.alwayshashing.com pool.vtconline.org uk1.vtconline.org pool.boxienet.net'.split(' '),
+        port: 9181
+      }
     },
     vertcoin: {
       seeds: [
