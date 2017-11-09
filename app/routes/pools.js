@@ -7,34 +7,40 @@ const Pool = mongoose.model('Pool');
 
 module.exports = function (server) {
   server.get('/api/pools', async (req, res, next) => {
+    if (!server.p2poolVersion) {
+      res.send([]);
+      return next();
+    }
+
     try {
       let pools;
 
       let reqGeo = geoip.lookup(req.connection.remoteAddress);
-      if(!reqGeo) {
+      if (!reqGeo) {
         reqGeo = {
-          ll: [0,0]
+          ll: [0, 0]
         };
       }
 
       let query = Pool.find({
         errCounter: 0,
-        sucCounter: {$gt: 0}
+        sucCounter: {$gt: 0},
+        $or: [{version: server.p2poolVersion}, {version: server.p2poolVersion + '-dirty'}]
       });
 
-      if(req.query.sortfee) {
+      if (req.query.sortfee) {
         query = query.sort({fee: req.query.sortfee});
       }
 
-      if(req.query.sortactive_miners) {
+      if (req.query.sortactive_miners) {
         query = query.sort({active_miners: req.query.sortactive_miners});
       }
 
-      if(req.query.sorthash_rate) {
+      if (req.query.sorthash_rate) {
         query = query.sort({hash_rate: req.query.sorthash_rate});
       }
 
-      if(req.query.sortping) {
+      if (req.query.sortping) {
         query = query.sort({ping: req.query.sortping});
       }
 
@@ -58,7 +64,8 @@ module.exports = function (server) {
           result: pools,
           length: await Pool.find({
             errCounter: 0,
-            sucCounter: {$gt: 0}
+            sucCounter: {$gt: 0},
+            $or: [{version: server.p2poolVersion}, {version: server.p2poolVersion + '-dirty'}]
           }).count()
         });
       } else {
@@ -68,7 +75,7 @@ module.exports = function (server) {
         res.send(pools);
       }
       return next();
-    }catch (err) {
+    } catch (err) {
       return next(err);
     }
   });
@@ -80,7 +87,7 @@ module.exports = function (server) {
 
   server.post('/api/pools', async (req, res, next) => {
     let p = await Pool.findOne({ip: req.body.ip});
-    if(p) {
+    if (p) {
       res.send(p);
     } else {
       p = new Pool({

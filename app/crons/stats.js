@@ -7,7 +7,7 @@ const logger = require('./../lib/logger');
 const Pool = mongoose.model('Pool');
 const StatisticEntry = mongoose.model('StatisticEntry');
 
-module.exports = () => {
+module.exports = (server) => {
   cron.schedule('*/5 * * * *', async () => {
     logger.info('Creating 5min statistics');
     await StatisticEntry.create({
@@ -59,7 +59,7 @@ module.exports = () => {
       value: await StatisticEntry.avgCombine('AvgEfficiency1h', fromDate, currentDate)
     });
   });
-  
+
   cron.schedule('*/5 * * * *', async () => {
     if (await (Pool.count()) === 0)
       return;

@@ -8,7 +8,7 @@ const Pool = mongoose.model('Pool');
 const Node = mongoose.model('Node');
 const config = require(path.join(__dirname, '../../config/config'));
 
-module.exports = () => {
+module.exports = (server) => {
   const updateFunc = async () => {
     const ps = await Pool.getToRefresh();
 

@@ -7,7 +7,7 @@ const logger = require('./../lib/logger');
 const Node = mongoose.model('Pool');
 const Pool = mongoose.model('Pool');
 
-module.exports = () => {
+module.exports = (server) => {
   // Remove Nodes and Pools with err count 5
   cron.schedule('0 * * * *', async () => {
     logger.info('Resetting offline nodes and pools');

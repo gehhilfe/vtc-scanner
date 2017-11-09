@@ -94,6 +94,6 @@ mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongo
     server.listen(config.app.port, async () => {
       logger.info('%s listening at %s', server.name, server.url);
 
-      crons();
+      crons(server);
     });
   }).catch(logger.debug);
