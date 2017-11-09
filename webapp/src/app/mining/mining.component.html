@@ -1,3 +1,118 @@
-<p>
-  mining works!
-</p>
+<div fxLayout="row">
+  <div fxFlex fxShow fxHide.lt-lg="true"></div>
+  <div fxFlex="50" fxFlex.lt-lg="" class="box mat-elevation-z2">
+    <mat-vertical-stepper icon="done">
+      <mat-step label="Get a Wallet" [completed]="false">
+        <p class="description">
+          There are two kinds of wallets available. For starters a Simplified Payment Verification (SPV)
+          wallet is recommended.
+        </p>
+        <div fxLayout="row" class="description">
+          <div fxFlex>
+            <div fxLayout="row">
+              <div fxFlexAlign="center">
+                <img src="assets/electrum.png">
+              </div>
+              <div>
+                <h3>Simplified Payment Verification (SPV) Wallet</h3>
+                <p>
+                  SPV wallets are fast, secure and reliable. During the setup you will generate a secret
+                  seed phrase. This phrase is synonymous with a prive key and must kept securely at anytime.
+                </p>
+                <p>
+                  <a href="https://electrum.vertcoin.org/">Electrum Vertcoin Wallet</a>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div fxFlex>
+            <div fxLayout="row">
+              <div fxFlexAlign="center">
+                <img src="assets/vtc.png">
+              </div>
+              <div>
+                <div>
+                  <h3>Full Node Wallet</h3>
+                  <p>
+                    A full node wallet validates every block and transaction. Furthermore a node distributes
+                    and secures the Vertcoin network.
+                    The initial synchronization can take some time but during this period you can already
+                    start mining.
+                  </p>
+                  <p>
+                    <a href="https://vertcoin.org/">Vertcoin Wallet</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-step>
+      <mat-step label="Download Miner" [completed]="false">
+        <div fxLayout="row" class="description">
+          <div fxFlex>
+            <div fxLayout="row">
+              <div fxFlexAlign="center">
+                <img src="assets/windows.png">
+              </div>
+              <div>
+                <h2>Windows</h2>
+                <p>
+                  The One Click Miner (OCM) combines CPU, Nvidia and AMD miner into one application and is the
+                  easiest way to mine Vertcoin with Windows.
+                </p>
+                <p>
+                  <a href="https://github.com/vertcoin/One-Click-Miner/releases">OCM Releases</a>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div fxFlex>
+            <div fxLayout="row">
+              <div fxFlexAlign="center">
+                <img src="assets/linux.png">
+              </div>
+              <div>
+                <h2>Linux</h2>
+                <p>
+                  As a Linux and a open source enthusiast you can get all recent miners from Github.
+                </p>
+                <p>
+                  <a href="https://github.com/vertcoin/vertminer-nvidia">Nvidia Vertcoin Miner</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-step>
+      <mat-step label="Select a Pool" [completed]="false">
+        <div class="description">
+          <p>
+            Selecting a P2Pool is recommended. All P2Pool work together as decentralised mining pool and you can switch
+            pools at anytime without losing any Vertcoin.
+          </p>
+          <p>
+            You should select a pool that is geographically near to your location, has a high uptime and low ping. To
+            support
+            decentralization a pool with a low miner count and hashrate should be prioritized. To remove trust in any
+            third
+            party you can also host your own P2Pool.
+          </p>
+          <button mat-raised-button color="accent" [routerLink]="['/','pools']">Select a Pool</button>
+        </div>
+      </mat-step>
+      <mat-step label="Become a Part of Vertcoin" [completed]="false">
+        <div class="description">
+          To see and read all Vertcoin related news and improvements join the Vertcoin community and spread information
+          about Vertcoin.
+          Join the Vertcoin Discord or Reddit and engage with other Vertcoin enthusiasts.
+        </div>
+      </mat-step>
+    </mat-vertical-stepper>
+  </div>
+  <div fxFlex fxShow fxHide.lt-lg="true"></div>
+</div>
+
+<div class="spacer"></div>
+<div class="spacer"></div>
+<div class="spacer"></div>

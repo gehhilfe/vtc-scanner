@@ -31,4 +31,8 @@ export class AppComponent {
       width: '600px'
     });
   }
+
+  openLink(url: string) {
+    window.location.href = url;
+  }
 }

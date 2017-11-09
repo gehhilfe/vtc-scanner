@@ -8,9 +8,7 @@
               [options]="lineChartOptions"
               [colors]="lineChartColors"
               [legend]="lineChartLegend"
-              [chartType]="lineChartType"
-              (chartHover)="chartHovered($event)"
-              (chartClick)="chartClicked($event)"></canvas>
+              [chartType]="lineChartType"></canvas>
     </div>
   </div>
   <div>
@@ -43,7 +41,7 @@
       </div>
       <div fxFlexAlign="center">
         <mat-button-toggle-group #group="matButtonToggleGroup" (change)="timeScale($event)">
-          <mat-button-toggle value="short">
+          <mat-button-toggle value="short" [checked]="true">
             5 min.
           </mat-button-toggle>
           <mat-button-toggle value="middle">

@@ -6,7 +6,7 @@ RUN npm install
 WORKDIR webapp
 RUN npm install
 RUN npm rebuild node-sass
-RUN ./node_modules/.bin/ng build
+RUN ./node_modules/.bin/ng build -prod  -aot
 WORKDIR ..
 
 EXPOSE 8080

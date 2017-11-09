@@ -22,11 +22,20 @@ module.exports = function (server) {
         };
       }
 
-      let query = Pool.find({
+      let baseQueryDesc = {
         errCounter: 0,
         sucCounter: {$gt: 0},
         $or: [{version: server.p2poolVersion}, {version: server.p2poolVersion + '-dirty'}]
-      });
+      };
+
+      if(req.query.net) {
+        if(req.query.net == 1)
+          baseQueryDesc['port'] = 9171;
+        else
+          baseQueryDesc['port'] = 9181;
+      }
+
+      let query = Pool.find(baseQueryDesc);
 
       if (req.query.sortfee) {
         query = query.sort({fee: req.query.sortfee});
@@ -62,11 +71,7 @@ module.exports = function (server) {
           .skip(actualPageSize * req.query.pageIndex);
         res.send({
           result: pools,
-          length: await Pool.find({
-            errCounter: 0,
-            sucCounter: {$gt: 0},
-            $or: [{version: server.p2poolVersion}, {version: server.p2poolVersion + '-dirty'}]
-          }).count()
+          length: await Pool.find(baseQueryDesc).count()
         });
       } else {
         pools = await query

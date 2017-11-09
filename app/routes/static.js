@@ -12,7 +12,7 @@ module.exports = (server) => {
   server.get('/nodes', serveIndex);
   server.get('/mining', serveIndex);
 
-  server.get(/(?!\/api).*/y, restifyPlugins.serveStatic({
+  server.get(/^(?!\/api).*/y, restifyPlugins.serveStatic({
     directory: './webapp/dist',
     default: 'index.html'
   }));

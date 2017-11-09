@@ -12,27 +12,27 @@
   <img width="188" height="177" src="assets/vtc.png">
 </div> -->
 
-<div id="spacer">
+<div class="spacer">
 </div>
 
 <router-outlet></router-outlet>
 
-<div id="spacer">
+<div class="spacer">
 </div>
 
 <div id="footer" color="primary">
   GET INVOLVED
   <div class="button-row" fxHide.lt-sm="true">
-    <button mat-fab>
+    <button mat-fab (click)="openLink('https://discord.gg/SUy9Hsr')">
       <fa name="heart" size="2x"></fa>
     </button>
-    <button mat-fab>
+    <button mat-fab (click)="openLink('https://www.reddit.com/r/vertcoin')">
       <fa name="reddit" size="2x"></fa>
     </button>
     <button mat-fab (click)="openDonate()">
       <fa name="usd" size="2x"></fa>
     </button>
-    <button mat-fab>
+    <button mat-fab (click)="openLink('https://github.com/Gehhilfe/vtc-scanner')">
       <fa name="github" size="2x"></fa>
     </button>
   </div>
