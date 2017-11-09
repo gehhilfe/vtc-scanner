@@ -8,11 +8,11 @@ const mongoose = require('mongoose');
 
 const models = require(path.join(__dirname, '/app/models/'));
 const routes = require(path.join(__dirname, '/app/routes/'));
+const crons = require(path.join(__dirname, '/app/crons/'));
 
 const restify = require('restify');
 const server = restify.createServer();
 const restifyPlugins = restify.plugins;
-const cron = require('node-cron');
 
 const logger = require('./app/lib/logger');
 
@@ -32,282 +32,33 @@ server.use(
 models();
 const Pool = mongoose.model('Pool');
 const Node = mongoose.model('Node');
-const StatisticEntry = mongoose.model('StatisticEntry');
 routes(server);
-
-
-server.get(/.*/, restifyPlugins.serveStatic({
-  directory: './webapp/dist',
-  default: 'index.html'
-}));
-
-const serveIndex = restifyPlugins.serveStatic({
-  directory: './webapp/dist',
-  file: 'index.html'
-});
-
-server.on('NotFound', (req, res, err, next) => {
-  serveIndex(req, res, next);
-});
 
 mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name, {useMongoClient: true})
   .then(async () => {
 
-    cron.schedule('*/5 * * * *', async () => {
-      logger.info('Creating 5min statistics');
-      await StatisticEntry.create({
-        type: 'Miners',
-        value: await Pool.sumMiners()
-      });
-      await StatisticEntry.create({
-        type: 'Hashrate',
-        value: await Pool.sumHashrate()
-      });
-      await StatisticEntry.create({
-        type: 'AvgEfficiency',
-        value: await Pool.averageEfficiency()
-      });
-    });
+    if((await Node.count()) === 0) {
+      logger.info('Bootstraping node search with seed nodes');
+      await Promise.all(_.map(config.vertcoin.seeds, async (it) => {
+        let ip = _.head(await (new Promise((resolve, reject) => dns.resolve(it, (err, res) => {
+          if (err)
+            reject(err);
+          else
+            resolve(res);
+        }))));
 
-    cron.schedule('0 * * * *', async () => {
-      logger.info('Creating 1h statistics');
-      const currentDate = new Date();
-      const fromDate = new Date(currentDate - 1000 * 3600); // minus 1 hour
-      await StatisticEntry.create({
-        type: 'Miners1h',
-        value: await StatisticEntry.avgCombine('Miners', fromDate, currentDate)
-      });
-      await StatisticEntry.create({
-        type: 'Hashrate1h',
-        value: await StatisticEntry.avgCombine('Hashrate', fromDate, currentDate)
-      });
-      await StatisticEntry.create({
-        type: 'AvgEfficiency1h',
-        value: await StatisticEntry.avgCombine('AvgEfficiency', fromDate, currentDate)
-      });
-    });
-
-    cron.schedule('0 0 * * *', async () => {
-      logger.info('Creating 1d statistics');
-      const currentDate = new Date();
-      const fromDate = currentDate - 1000 * 3600 * 24; // minus 24 hours
-      await StatisticEntry.create({
-        type: 'Miners1d',
-        value: await StatisticEntry.avgCombine('Miners1h', fromDate, currentDate)
-      });
-      await StatisticEntry.create({
-        type: 'Hashrate1d',
-        value: await StatisticEntry.avgCombine('Hashrate1h', fromDate, currentDate)
-      });
-      await StatisticEntry.create({
-        type: 'AvgEfficiency1d',
-        value: await StatisticEntry.avgCombine('AvgEfficiency1h', fromDate, currentDate)
-      });
-    });
-
-    // Remove Nodes and Pools with err count 5
-    cron.schedule('0 * * * *', async () => {
-      await Node.remove({
-        errCounter: {$gt: 4}
-      });
-      await Pool.remove({
-        errCounter: {$gt: 4}
-      });
-    });
-
-
-    logger.info('Removing all vertcoin nodes and pools');
-    //await Node.remove({});
-    //await Pool.remove({});
-
-    await Promise.all(_.map(config.vertcoin.seeds, async (it) => {
-      let ip = _.head(await (new Promise((resolve, reject) => dns.resolve(it, (err, res) => {
-        if (err)
-          reject(err);
-        else
-          resolve(res);
-      }))));
-
-      if ((await Node.find({ip: ip}).count()) === 0)
-        Node.create({
-          ip: ip,
-          port: config.vertcoin.port
-        });
-    }));
-    logger.info('Seed notes added');
-
-    const nodeUpdateFunc = async () => {
-      const nodes = await Node.find({
-        errCounter: {$lt: 5}
-      }).sort({
-        updatedAt: 1
-      }).limit(10);
-      await Promise.all(_.map(nodes, async (n) => {
-        logger.debug('Update vertcoin node status of ' + n.ip);
-        try {
-          let peers = await n.updateInfo();
-          n.sucCounter += 1;
-          peers = _.sortBy(peers, 'time');
-          await Promise.all(_.map(peers, async (it) => {
-            let n = await Node.findOne({
-              ip: it.ip
-            });
-            if (!n) {
-              n = await Node.create({
-                ip: it.ip,
-                port: config.vertcoin.port
-              });
-            }
-          }));
-        }
-        catch (err) {
-          n.errCounter += 1;
-        }
-        finally {
-          await n.save();
-        }
+        if ((await Node.find({ip: ip}).count()) === 0)
+          Node.create({
+            ip: ip,
+            port: config.vertcoin.port
+          });
       }));
-      setTimeout(nodeUpdateFunc, 1);
-    };
-    setTimeout(nodeUpdateFunc, 1);
+      logger.info('Seed notes added');
+    }
 
     server.listen(8080, async () => {
       logger.info('%s listening at %s', server.name, server.url);
 
-      const updateFunc = async () => {
-        const ps = await Pool.getToRefresh();
-
-        await Promise.all(_.map(ps, async (p) => {
-          try {
-            await new Promise(resolve => {
-              setTimeout(resolve, (Math.random() * 5 + 1) * 1000);
-            });
-            logger.debug('Update pool status of ' + p.ip);
-
-            let startTime = new Date();
-            const peers = await p.getPeers();
-            let endTime = new Date();
-
-            let diff = endTime - startTime;
-            startTime = new Date();
-            await p.updateStats();
-            endTime = new Date();
-
-            diff += endTime - startTime;
-            diff /= 2;
-            if (!p.ping || p.ping === 0) {
-              p.ping = diff;
-            } else {
-              // Average over time
-              p.ping = Math.floor(p.ping * 0.3 + p.ping * 0.7);
-            }
-            p.errCounter = 0;
-            p.sucCounter += 1;
-            await Promise.all(_.map(peers, async (it) => {
-              let p = await Pool.findOne({ip: it});
-              if (!p) {
-                await Pool.create({ip: it});
-              }
-            }));
-          }
-          catch (err) {
-            p.errCounter += 1;
-            p.sucCounter = 0;
-            p.last_offline = Date.now();
-          }
-          finally {
-            await p.save();
-          }
-        }));
-        setTimeout(updateFunc, 30000);
-      };
-
-
-      const scoreFunc = async () => {
-        if (await (Pool.count()) === 0)
-          return;
-        logger.info('Updating pool score');
-
-        const avgPing = await Pool.averagePing();
-        const maxMiner = await Pool.maxMiners();
-        const maxHashRate = await Pool.maxHashrate();
-        const minOffline = (await Pool.aggregate({
-          $group: {
-            _id: null,
-            total: {$min: '$last_offline'}
-          }
-        }))[0].total;
-        const maxOnlineMs = new Date() - minOffline;
-
-        await Promise.all(_.map(await Pool.find({}), (it) => {
-
-          //Ping Score
-          let pingScore = 0;
-          if (it.ping !== undefined && it.ping !== 0) {
-            if (it.ping <= 0.2 * avgPing)
-              pingScore = 5;
-            else if (it.ping <= 0.5 * avgPing)
-              pingScore = 4;
-            else if (it.ping <= 0.9 * avgPing)
-              pingScore = 3;
-            else if (it.ping <= avgPing)
-              pingScore = 2;
-            else
-              pingScore = 1;
-          }
-
-          //Miner Score
-          let minerScore = 0;
-          if (it.active_miners !== undefined) {
-            if (it.active_miners <= 0.05 * maxMiner)
-              minerScore = 5;
-            else if (it.active_miners <= 0.2 * maxMiner)
-              minerScore = 4;
-            else if (it.active_miners <= 0.4 * maxMiner)
-              minerScore = 3;
-            else if (it.active_miners <= 0.5 * maxMiner)
-              minerScore = 2;
-            else
-              minerScore = 1;
-          }
-
-          //Hashrate Score
-          let hashRateScore = 0;
-          if (it.hash_rate !== undefined) {
-            if (it.hash_rate <= 0.05 * maxHashRate)
-              hashRateScore = 5;
-            else if (it.hash_rate <= 0.2 * maxHashRate)
-              hashRateScore = 4;
-            else if (it.hash_rate <= 0.4 * maxHashRate)
-              hashRateScore = 3;
-            else if (it.hash_rate <= 0.5 * maxHashRate)
-              hashRateScore = 2;
-            else
-              hashRateScore = 1;
-          }
-
-          //Uptime Score
-          let uptimeScore = 0;
-          if (it.last_offline !== undefined) {
-            const onlineMs = new Date() - it.last_offline;
-            if (onlineMs >= 0.8 * maxOnlineMs)
-              uptimeScore = 5;
-            else if (onlineMs >= 0.6 * maxOnlineMs)
-              uptimeScore = 4;
-            else if (onlineMs >= 0.4 * maxOnlineMs)
-              uptimeScore = 3;
-            else if (onlineMs >= 0.2 * maxOnlineMs)
-              uptimeScore = 2;
-            else
-              uptimeScore = 1;
-          }
-
-          it.score = Math.round((pingScore + minerScore + hashRateScore + uptimeScore) / 5);
-          return it.save();
-        }));
-      };
-      cron.schedule('*/5 * * * *', scoreFunc);
-
-      updateFunc();
+      crons();
     });
-  }).catch(console.log);
+  }).catch(logger.debug);
