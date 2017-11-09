@@ -24,6 +24,8 @@ export class AppComponent {
       sanitizer.bypassSecurityTrustResourceUrl('/assets/github.svg'));
     this.iconRegistry.addSvgIcon('star',
       sanitizer.bypassSecurityTrustResourceUrl('/assets/star.svg'));
+    this.iconRegistry.addSvgIcon('content_copy',
+      sanitizer.bypassSecurityTrustResourceUrl('/assets/content_copy.svg'));
   };
 
   openPools() {
