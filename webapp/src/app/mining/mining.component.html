@@ -1,6 +1,6 @@
-<div fxLayout="row">
+<div fxLayout="row" class="margin">
   <div fxFlex fxShow fxHide.lt-lg="true"></div>
-  <div fxFlex="50" fxFlex.lt-lg="" class="box mat-elevation-z2">
+  <div fxFlex.gt-lg="40" fxFlex.lg="50" class="box mat-elevation-z2">
     <mat-vertical-stepper icon="done">
       <mat-step label="Get a Wallet" [completed]="false">
         <p class="description">
@@ -98,7 +98,11 @@
             third
             party you can also host your own P2Pool.
           </p>
-          <button mat-raised-button color="accent" [routerLink]="['/','pools']">Select a Pool</button>
+          <div fxLayout="row">
+            <div fxFlex></div>
+            <button fxLayout="center" mat-raised-button [routerLink]="['/','pools']">Select a Pool</button>
+            <div fxFlex></div>
+          </div>
         </div>
       </mat-step>
       <mat-step label="Become a Part of Vertcoin" [completed]="false">
@@ -107,16 +111,16 @@
           about Vertcoin.
           Join the Vertcoin Discord or Reddit and engage with other Vertcoin enthusiasts.
 
-          <div class="button-row" fxLayout="row">
+          <div fxLayout="row">
             <div fxFlex></div>
             <div fxFlex fxFlexAlign="center" fxLayoutAlign="center">
-              <button mat-fab (click)="openLink('https://discord.gg/SUy9Hsr')">
+              <button mat-fab (click)="openLink('https://discord.gg/SUy9Hsr')" color="primary">
                 <mat-icon svgIcon="discord"></mat-icon>
               </button>
             </div>
             <div fxFlex></div>
             <div fxFlex fxFlexAlign="center" fxLayoutAlign="center">
-              <button mat-fab (click)="openLink('https://www.reddit.com/r/vertcoin')">
+              <button mat-fab (click)="openLink('https://www.reddit.com/r/vertcoin')" color="primary">
                 <mat-icon svgIcon="reddit"></mat-icon>
               </button>
             </div>

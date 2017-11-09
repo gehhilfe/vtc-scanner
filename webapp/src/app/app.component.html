@@ -4,22 +4,20 @@
 
   <button mat-button (click)="openPools()">POOLS</button>
   <button mat-button (click)="openNodes()">NODES</button>
-  <button mat-button (click)="openMining()">GET STARTED</button>
+  <button mat-button (click)="openMining()">START MINING</button>
 </mat-toolbar>
 
+<div id="content">
 
-<!-- <div style="text-align:center">
-  <img width="188" height="177" src="assets/vtc.png">
-</div> -->
+  <div class="spacer">
+  </div>
 
-<div class="spacer">
+  <router-outlet></router-outlet>
+
+  <div class="spacer">
+  </div>
+
 </div>
-
-<router-outlet></router-outlet>
-
-<div class="spacer">
-</div>
-
 <div id="footer" color="primary">
   GET INVOLVED
   <div class="button-row" fxHide.lt-sm="true">
