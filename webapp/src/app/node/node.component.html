@@ -6,7 +6,7 @@
         <mat-card-title>Vertcoin Nodes Worldwide</mat-card-title>
         <mat-card-subtitle>Start your own node and support the network!</mat-card-subtitle>
       </mat-card-header>
-      <agm-map [latitude]="lat" [longitude]="lng" [zoom]="1">
+      <agm-map [latitude]="lat" [longitude]="lng" [zoom]="1" class="agm-map" ngClass.lt-md="agm-map-sm">
         <agm-marker-cluster [imagePath]="'assets/m'">
         <ng-template ngFor let-node [ngForOf]="nodes">
           <agm-marker [latitude]="node.location.coordinates[1]"

@@ -1,10 +1,20 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <mat-toolbar id="toolbar" color="primary">
   {{title}}
-
-  <button mat-button (click)="openPools()">POOLS</button>
-  <button mat-button (click)="openNodes()">NODES</button>
-  <button mat-button (click)="openMining()">START MINING</button>
+  <div fxHide.lt-sm="true">
+    <button mat-button (click)="openPools()">POOLS</button>
+    <button mat-button (click)="openNodes()">NODES</button>
+    <button mat-button (click)="openMining()">START MINING</button>
+  </div>
+  <span class="toolbar-spacer"></span>
+  <button fxHide="true" fxShow.lt-sm="true" id="menuBtn" mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon svgIcon="menu"></mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="openPools()">POOLS</button>
+    <button mat-menu-item (click)="openNodes()">NODES</button>
+    <button mat-menu-item (click)="openMining()">START MINING</button>
+  </mat-menu>
 </mat-toolbar>
 
 <div id="content">
@@ -14,7 +24,7 @@
 
   <router-outlet></router-outlet>
 
-  <div class="spacer">
+  <div id="lowerspacer">
   </div>
 
 </div>
@@ -31,6 +41,21 @@
       <mat-icon svgIcon="donate"></mat-icon>
     </button>
     <button mat-fab (click)="openLink('https://github.com/Gehhilfe/vtc-scanner')">
+      <mat-icon svgIcon="github"></mat-icon>
+    </button>
+  </div>
+
+  <div class="button-row-mobile" fxHide fxShow.lt-sm="true">
+    <button mat-mini-fab (click)="openLink('https://discord.gg/SUy9Hsr')">
+      <mat-icon svgIcon="discord"></mat-icon>
+    </button>
+    <button mat-mini-fab (click)="openLink('https://www.reddit.com/r/vertcoin')">
+      <mat-icon svgIcon="reddit"></mat-icon>
+    </button>
+    <button mat-mini-fab (click)="openDonate()">
+      <mat-icon svgIcon="donate"></mat-icon>
+    </button>
+    <button mat-mini-fab (click)="openLink('https://github.com/Gehhilfe/vtc-scanner')">
       <mat-icon svgIcon="github"></mat-icon>
     </button>
   </div>

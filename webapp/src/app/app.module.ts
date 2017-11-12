@@ -7,7 +7,7 @@ import {
   MatButtonModule, MatIconModule, MatPaginatorModule, MatTableModule, MatToolbarModule, MatInputModule,
   MatFormFieldModule, MatListModule, MatProgressBarModule, MatSlideToggleModule, MatExpansionModule, MatSortModule,
   MatTabsModule, MatButtonToggleModule, MatCardModule, MatDialogModule, MatProgressSpinnerModule, MatStepperModule,
-  MatIconRegistry
+  MatIconRegistry, MatMenuModule
 } from "@angular/material";
 import {PoolTableComponent} from './pool-table/pool-table.component';
 import {FlexLayoutModule} from "@angular/flex-layout";
@@ -79,6 +79,7 @@ const appRoutes: Routes = [
     MatIconModule,
     MatTableModule,
     MatTabsModule,
+    MatMenuModule,
     MatPaginatorModule,
     FlexLayoutModule,
     MatInputModule,

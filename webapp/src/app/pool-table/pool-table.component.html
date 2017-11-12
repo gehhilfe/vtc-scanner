@@ -10,8 +10,8 @@
 
     <!-- Score Column -->
     <ng-container matColumnDef="score">
-      <mat-header-cell *matHeaderCellDef></mat-header-cell>
-      <mat-cell *matCellDef="let element">
+      <mat-header-cell *matHeaderCellDef fxHide.lt-sm="true"></mat-header-cell>
+      <mat-cell *matCellDef="let element" fxHide.lt-sm="true">
         <mat-icon color="primary" *ngIf="element.score == 4" svgIcon="star"></mat-icon>
       </mat-cell>
     </ng-container>
@@ -19,7 +19,7 @@
     <!-- IP Column -->
     <ng-container matColumnDef="ip">
       <mat-header-cell *matHeaderCellDef>IP</mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.ip}}</mat-cell>
+      <mat-cell *matCellDef="let element"><small>{{element.ip}}</small></mat-cell>
     </ng-container>
 
     <!-- Fee Column -->

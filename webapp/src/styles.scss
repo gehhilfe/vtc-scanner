@@ -107,6 +107,10 @@ body {
   margin: 15px 25px;
 }
 
+.button-row-mobile button {
+  margin: 15px 10px;
+}
+
 #footer fa {
   position: relative;
   top: -2px;
@@ -117,12 +121,13 @@ body {
 }
 
 #lowerspacer {
-  height: 50px;
+  height: 135px;
 }
 
 .margin  {
   margin: 5px;
 }
+
 a {
   color: $primary-color-light;
   display: inline-block;
@@ -144,4 +149,12 @@ a {
       width: 0;
     }
   }
+}
+
+#menuBtn svg {
+  fill: #fff;
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
 }

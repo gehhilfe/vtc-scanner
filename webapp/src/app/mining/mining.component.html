@@ -4,12 +4,33 @@
     <mat-vertical-stepper icon="done">
       <mat-step label="Get a Wallet" [completed]="false">
         <p class="description">
-          There are two kinds of wallets available. For starters a Simplified Payment Verification (SPV)
+          For miners a Full Node Vertcoin
           wallet is recommended.
         </p>
-        <div fxLayout="row" class="description">
+        <div fxLayout="row" fxLayout.lt-md="column" class="description">
           <div fxFlex>
-            <div fxLayout="row">
+            <div fxLayout="row" fxLayout.lt-md="column">
+              <div fxFlexAlign="center">
+                <img src="assets/vtc.png">
+              </div>
+              <div>
+                <div>
+                  <h3>Full Node Wallet</h3>
+                  <p>
+                    A full node wallet validates every block and transaction. Furthermore a node distributes
+                    and secures the Vertcoin network. The initial synchronization can take some time but during
+                    this period you can already start mining.
+                  </p>
+                  <p>
+                    <a href="https://vertcoin.org/">Vertcoin Wallet</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!---
+          <div fxFlex>
+            <div fxLayout="row" fxLayout.lt-md="column">
               <div fxFlexAlign="center">
                 <img src="assets/electrum.png">
               </div>
@@ -24,34 +45,13 @@
                 </p>
               </div>
             </div>
-          </div>
-          <div fxFlex>
-            <div fxLayout="row">
-              <div fxFlexAlign="center">
-                <img src="assets/vtc.png">
-              </div>
-              <div>
-                <div>
-                  <h3>Full Node Wallet</h3>
-                  <p>
-                    A full node wallet validates every block and transaction. Furthermore a node distributes
-                    and secures the Vertcoin network.
-                    The initial synchronization can take some time but during this period you can already
-                    start mining.
-                  </p>
-                  <p>
-                    <a href="https://vertcoin.org/">Vertcoin Wallet</a>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+          </div>-->
         </div>
       </mat-step>
       <mat-step label="Download Miner" [completed]="false">
-        <div fxLayout="row" class="description">
+        <div fxLayout="row" class="description" fxLayout.lt-md="column">
           <div fxFlex>
-            <div fxLayout="row">
+            <div fxLayout="row" fxLayout.lt-md="column">
               <div fxFlexAlign="center">
                 <img src="assets/windows.png">
               </div>
@@ -68,7 +68,7 @@
             </div>
           </div>
           <div fxFlex>
-            <div fxLayout="row">
+            <div fxLayout="row" fxLayout.lt-md="column">
               <div fxFlexAlign="center">
                 <img src="assets/linux.png">
               </div>
@@ -108,9 +108,10 @@
       <mat-step label="Become a Part of Vertcoin" [completed]="false">
         <div class="description">
           <p>
-          To see and read all Vertcoin related news and improvements join the Vertcoin community and spread information
-          about Vertcoin.
-          Join the Vertcoin Discord or Reddit and engage with other Vertcoin enthusiasts.
+            To see and read all Vertcoin related news and improvements join the Vertcoin community and spread
+            information
+            about Vertcoin.
+            Join the Vertcoin Discord or Reddit and engage with other Vertcoin enthusiasts.
           </p>
           <div fxLayout="row">
             <div fxFlex></div>

@@ -1,3 +1,7 @@
-agm-map {
+.agm-map {
   height: 500px;
+}
+
+.agm-map-sm {
+  height: 350px;
 }
