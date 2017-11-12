@@ -32,6 +32,8 @@ import {AgmJsMarkerClustererModule, ClusterManager} from '@agm/js-marker-cluster
 import { DonateDialogComponent } from './donate-dialog/donate-dialog.component';
 import {ClipboardModule} from "ngx-clipboard/dist";
 import {HttpModule} from "@angular/http";
+import { environment } from '../environments/environment';
+
 const appRoutes: Routes = [
   {
     path: 'pools',
@@ -68,7 +70,7 @@ const appRoutes: Routes = [
   ],
   imports: [
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyBPnvee1X_h5dmYlQLj77rb6evHQC8NxRQ'
+      apiKey: environment.GOOGLE_API_KEY
     }),
     AgmJsMarkerClustererModule,
     MomentModule,

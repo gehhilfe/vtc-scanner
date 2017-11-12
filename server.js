@@ -29,6 +29,14 @@ server.use(
   }
 );
 
+// per request logging
+
+server.pre((req, res, next) => {
+  logger.debug(`${req.method} - ${req.getPath()}`);
+  return next();
+});
+
+
 models();
 const Pool = mongoose.model('Pool');
 const Node = mongoose.model('Node');

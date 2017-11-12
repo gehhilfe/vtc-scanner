@@ -107,7 +107,7 @@ const config = {
       port: NODE_PORT
     },
     db: {
-      host: 'db',
+      host: MONGO_HOST,
       port: MONGO_PORT,
       name: APP_NAME + NODE_ENV
     },
