@@ -32,7 +32,8 @@ server.use(
 // per request logging
 
 server.pre((req, res, next) => {
-  logger.debug(`${req.method} - ${req.getPath()}`);
+  const reqIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  logger.debug(`${reqIp} - ${req.method} - ${req.getPath()}`);
   return next();
 });
 

@@ -29,7 +29,7 @@ const config = {
     },
     log: {
       name: APP_NAME + NODE_ENV,
-      level: LOG_LEVEL,
+      level: 'debug',
       exceptions: true
     },
     p2pool: {

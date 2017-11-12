@@ -15,7 +15,9 @@ module.exports = function (server) {
     try {
       let pools;
 
-      let reqGeo = geoip.lookup(req.connection.remoteAddress);
+      const reqIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
+      let reqGeo = geoip.lookup(reqIp);
       if (!reqGeo) {
         reqGeo = {
           ll: [0, 0]
