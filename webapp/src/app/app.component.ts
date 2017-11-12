@@ -43,9 +43,7 @@ export class AppComponent {
   }
 
   openDonate() {
-    this.dialog.open(DonateDialogComponent, {
-      width: '600px'
-    });
+    this.dialog.open(DonateDialogComponent);
   }
 
   openLink(url: string) {

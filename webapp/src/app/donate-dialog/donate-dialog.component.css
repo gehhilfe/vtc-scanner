@@ -15,3 +15,12 @@ a, a:visited {
 a:hover {
   color: #1B5C2E;
 }
+
+
+.donate {
+  text-align: center;
+}
+
+.donate-sm .vtc_addr {
+  font-size: 0.6em;
+}

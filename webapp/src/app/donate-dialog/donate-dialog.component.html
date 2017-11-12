@@ -1,20 +1,17 @@
 <h2 mat-dialog-title>Donate</h2>
 <mat-dialog-content>
-  <div fxLayout="row">
+  <div fxLayout="row" fxLayout.lt-md="column" class="donate" ngClass.lt-md="donate-sm">
     <img class="donateIcon" src="https://www.gravatar.com/avatar/995df9ae1c984818cf29c8f04151ef5a?s=150" width="50" height="50" fxFlexAlign="center">
     <div fxLayout="column">
       <h2>Vertcoin Scanner Developer Tipjar</h2>
-      <h4>VTC: <a href="https://bitinfocharts.com/vertcoin/address/VsrYmjmGtTfV2p7ofyR2urXgrzm9yU9veA">VsrYmjmGtTfV2p7ofyR2urXgrzm9yU9veA</a><button mat-icon-button (click)="copyGehhilfe()"><mat-icon svgIcon="content_copy"></mat-icon></button></h4>
+      <h4>VTC<br/><a href="https://bitinfocharts.com/vertcoin/address/VsrYmjmGtTfV2p7ofyR2urXgrzm9yU9veA" class="vtc_addr">VsrYmjmGtTfV2p7ofyR2urXgrzm9yU9veA</a><button mat-icon-button (click)="copyGehhilfe()"><mat-icon svgIcon="content_copy"></mat-icon></button></h4>
     </div>
   </div>
-  <div fxLayout="row">
+  <div fxLayout="row" fxLayout.lt-md="column" class="donate" ngClass.lt-md="donate-sm">
     <img class="donateIcon"  src="assets/vtc.png" width="50" height="50" fxFlexAlign="center">
     <div fxLayout="column">
       <h2>Vertcoin Developer Tipjar</h2>
-      <h4>VTC: <a href="https://bitinfocharts.com/vertcoin/address/VpBsRnN749jYHE9hT8dZreznHfmFMdE1yG">VpBsRnN749jYHE9hT8dZreznHfmFMdE1yG</a><button mat-icon-button (click)="copyDev()"><mat-icon svgIcon="content_copy"></mat-icon></button></h4>
+      <h4>VTC<br/><a href="https://bitinfocharts.com/vertcoin/address/VpBsRnN749jYHE9hT8dZreznHfmFMdE1yG" class="vtc_addr">VpBsRnN749jYHE9hT8dZreznHfmFMdE1yG</a><button mat-icon-button (click)="copyDev()"><mat-icon svgIcon="content_copy"></mat-icon></button></h4>
     </div>
   </div>
 </mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button mat-dialog-close>Dismiss</button>
-</mat-dialog-actions>
