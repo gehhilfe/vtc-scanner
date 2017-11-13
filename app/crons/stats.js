@@ -45,7 +45,7 @@ module.exports = (server) => {
   cron.schedule('0 0 * * *', async () => {
     logger.info('Creating 1d statistics');
     const currentDate = new Date();
-    const fromDate = currentDate - 1000 * 3600 * 24; // minus 24 hours
+    const fromDate = new Date(currentDate - 1000 * 3600 * 24); // minus 24 hours
     await StatisticEntry.create({
       type: 'Miners1d',
       value: await StatisticEntry.avgCombine('Miners1h', fromDate, currentDate)
