@@ -50,7 +50,7 @@ export class PoolService {
       .delay(20000)
   }
 
-  listPools(page: PageEvent, sort: Sort) {
+  listPools(page: PageEvent, sort: Sort, network: number) {
     let httpParams = new HttpParams()
       .set('pageIndex', page.pageIndex.toString())
       .set('pageSize', page.pageSize.toString());
@@ -81,6 +81,10 @@ export class PoolService {
         httpParams = httpParams.set("sortping", "1");
       if (sort.direction === "desc")
         httpParams = httpParams.set("sortping", "-1");
+    }
+
+    if(network !== 0) {
+      httpParams = httpParams.set("port", network.toString());
     }
 
     return this.http

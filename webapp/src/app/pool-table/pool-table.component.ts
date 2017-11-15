@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {CollectionViewer, DataSource} from "@angular/cdk/collections";
 import {Observable} from "rxjs/Observable";
 import "rxjs/add/observable/of";
-import {MatPaginator, MatSort, PageEvent, Sort} from "@angular/material";
+import {MatPaginator, MatSelectChange, MatSort, PageEvent, Sort} from "@angular/material";
 import {PoolService} from "../pool.service";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Subject} from "rxjs/Subject";
@@ -17,6 +17,8 @@ export class PoolTableComponent implements OnInit {
 
   displayedColumns = ['score', 'country', 'ip', 'fee', 'active_miners', 'hash_rate', 'ping', 'uptime'];
   dataSource = new PoolDataSource();
+
+  network = 0;
 
   lastSort: Sort = {
     active: "fee",
@@ -44,7 +46,7 @@ export class PoolTableComponent implements OnInit {
         pageSize: 5,
         pageIndex: 0,
         length: 5
-      }, this.lastSort).subscribe(
+      }, this.lastSort, this.network).subscribe(
       (res) => {
         this.numberOfEntries = res.length;
         this.dataSource.setData(res.result);
@@ -69,7 +71,20 @@ export class PoolTableComponent implements OnInit {
     // Page index change
     this.bussy = true;
     this.lastPage = event;
-    this.poolService.listPools(event, this.lastSort).subscribe(
+    this.poolService.listPools(event, this.lastSort, this.network).subscribe(
+      (res) => {
+        this.numberOfEntries = res.length;
+        this.dataSource.setData(res.result);
+        this.bussy = false;
+      },
+      (err) => {
+        this.bussy = false;
+      }
+    );
+  }
+
+  networkChange(event: MatSelectChange) {
+    this.poolService.listPools(this.lastPage, this.lastSort, event.value).subscribe(
       (res) => {
         this.numberOfEntries = res.length;
         this.dataSource.setData(res.result);

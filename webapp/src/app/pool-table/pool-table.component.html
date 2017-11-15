@@ -19,7 +19,9 @@
     <!-- IP Column -->
     <ng-container matColumnDef="ip">
       <mat-header-cell *matHeaderCellDef>IP</mat-header-cell>
-      <mat-cell *matCellDef="let element"><small>{{element.ip}}</small></mat-cell>
+      <mat-cell *matCellDef="let element">
+        <small>{{element.ip}}</small>
+      </mat-cell>
     </ng-container>
 
     <!-- Fee Column -->
@@ -37,7 +39,8 @@
     <!-- Hashrate Column -->
     <ng-container matColumnDef="hash_rate">
       <mat-header-cell *matHeaderCellDef mat-sort-header fxHide.lt-sm="true">Hashrate</mat-header-cell>
-      <mat-cell *matCellDef="let element" class="numbercell" fxHide.lt-sm="true"> {{element.hash_rate | hashRate}}</mat-cell>
+      <mat-cell *matCellDef="let element" class="numbercell" fxHide.lt-sm="true"> {{element.hash_rate | hashRate}}
+      </mat-cell>
     </ng-container>
 
     <!-- Reponsetime Column -->
@@ -49,17 +52,32 @@
     <!-- Uptime Column -->
     <ng-container matColumnDef="uptime">
       <mat-header-cell *matHeaderCellDef fxHide.lt-md="true">Uptime</mat-header-cell>
-      <mat-cell *matCellDef="let element" class="numbercell" fxHide.lt-md="true"> {{element.last_offline | uptime | amDuration:'ms'}}
+      <mat-cell *matCellDef="let element" class="numbercell" fxHide.lt-md="true"> {{element.last_offline | uptime |
+        amDuration:'ms'}}
       </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
   </mat-table>
-  <mat-paginator [length]="numberOfEntries"
-                 [pageSize]="5"
-                 [pageSizeOptions]="[5, 10, 25]"
-                 (page)="changePage($event)">
-  </mat-paginator>
+  <div fxLayout="row" fxLayoutAlign="end center" class="mat-paginator-page-size mat-paginator">
+    <div class="mat-paginator-page-size-label">
+      Network:
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-select [(value)]="network" (change)="networkChange($event)">
+          <mat-option [value]="0">Both</mat-option>
+          <mat-option [value]="9171">Above 100 MHs</mat-option>
+          <mat-option [value]="9181">Below 100 MHs</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <mat-paginator [length]="numberOfEntries"
+                   [pageSize]="5"
+                   [pageSizeOptions]="[5, 10, 25]"
+                   (page)="changePage($event)">
+    </mat-paginator>
+  </div>
   <mat-progress-bar mode="query" *ngIf="bussy"></mat-progress-bar>
 </div>

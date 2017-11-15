@@ -30,11 +30,8 @@ module.exports = function (server) {
         $or: [{version: server.p2poolVersion}, {version: server.p2poolVersion + '-dirty'}]
       };
 
-      if(req.query.net) {
-        if(req.query.net == 1)
-          baseQueryDesc['port'] = 9171;
-        else
-          baseQueryDesc['port'] = 9181;
+      if(req.query.port) {
+        baseQueryDesc.port = req.query.port;
       }
 
       let query = Pool.find(baseQueryDesc);
@@ -54,6 +51,7 @@ module.exports = function (server) {
       if (req.query.sortping) {
         query = query.sort({ping: req.query.sortping});
       }
+
 
 
       query.sort({score: -1});
